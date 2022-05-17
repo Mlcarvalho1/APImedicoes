@@ -55,6 +55,10 @@ export default class User extends Model {
     return this;
   }
 
+  static associate(models) {
+    this.hasMany(models.patient, { foreignKey: 'user_id', as: 'patients' });
+  }
+
   passwordIsValid(password) {
     return bcryptjs.compare(password, this.password_hash);
   }

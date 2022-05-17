@@ -1,49 +1,69 @@
 import Patient from '../models/Patient';
+import User from '../models/User';
 
 class PatientController {
   async index(req, res) {
-    const patients = await Patient.findAll();
-    res.json(patients);
+    const user = await User.findByPk(req.userId, {
+      include: { association: 'patients' },
+    });
+
+    res.json(user);
   }
 
   async store(req, res) {
     try {
-      const data = req.body;
-      const patient = await Patient.create(data);
+      const {
+        name, age, weight, height,
+      } = req.body;
+      const user = await User.findByPk(req.userId);
+      const user_id = req.userId;
+      if (!user) {
+        return res.status(400).json({
+          errors: ['Usuario n existente'],
+        });
+      }
+
+      const patient = await Patient.create({
+        name,
+        age,
+        weight,
+        height,
+        user_id,
+      });
 
       return res.json(patient);
     } catch (e) {
       return res.status(400).json({
-        errors: e.errors.map((err) => err.mensage),
+        errors: e.errors.map((err) => err.message),
       });
     }
   }
 
-  async show(req, res) {
-    try {
-      const { id } = req.params;
+  // async show(req, res) {
+  //   try {
+  //     const { id } = req.params;
 
-      if (!id) {
-        return res.status(400).json({
-          errors: ['Faltando id'],
-        });
-      }
+  //     if (!id) {
+  //       return res.status(400).json({
+  //         errors: ['Faltando id'],
+  //       });
+  //     }
 
-      const patient = await Patient.findByPk(id);
+  //     const patient = await Patient.findByPk(id);
 
-      if (!patient) {
-        return res.status(400).json({
-          errors: ['paciente nao existe'],
-        });
-      }
+  //     if (!patient) {
+  //       return res.status(400).json({
+  //         errors: ['paciente nao existe'],
+  //       });
+  //     }
 
-      return res.json(patient);
-    } catch (e) {
-      return res.status(400).json({
-        errors: e.errors.map((err) => err.mensage),
-      });
-    }
-  }
+  //     return res.json(patient);
+  //   } catch (e) {
+  //     return res.status(400).json({
+  //       errors: e.errors.map((err) => err.mensage),
+  //     });
+  //   }
+  // }
 
   async delete(req, res) {
     try {
