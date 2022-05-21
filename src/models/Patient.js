@@ -7,15 +7,9 @@ export default class Patient extends Model {
         type: Sequelize.STRING,
         defaultValue: '',
       },
-      age: {
-        type: Sequelize.INTEGER,
-        defaultValue: 0,
+      borned_at: {
+        type: Sequelize.DATEONLY,
         allowNull: false,
-        validate: {
-          isInt: {
-            msg: 'Idade precisa ser um numero inteiro',
-          },
-        },
       },
       weight: {
         type: Sequelize.FLOAT,
@@ -29,14 +23,18 @@ export default class Patient extends Model {
       },
     }, {
       sequelize,
+      paranoid: true,
       modelName: 'patient',
       tableName: 'patients',
+      deletedAt: 'deleted_at',
     });
 
     return this;
   }
 
   static associate(models) {
-    this.belongsTo(models.user, { foreignKey: 'user_id', as: 'user' });
+    this.belongsTo(models.user, { foreignKey: 'user_id' });
+    this.hasMany(models.profile_pic, { foreignKey: 'patient_id' });
+    this.hasMany(models.measurement, { foreignKey: 'patient_id' });
   }
 }

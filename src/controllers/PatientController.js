@@ -1,36 +1,21 @@
-import Patient from '../models/Patient';
-import User from '../models/User';
+import PatientService from '../services/PatientService';
 
 class PatientController {
   async index(req, res) {
-    const user = await User.findByPk(req.userId, {
-      include: { association: 'patients' },
-    });
-
-    res.json(user);
+    try {
+      const patients = await PatientService.index(req.userId);
+      res.json(patients);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async store(req, res) {
     try {
-      const {
-        name, age, weight, height,
-      } = req.body;
-      const user = await User.findByPk(req.userId);
-      const user_id = req.userId;
-      if (!user) {
-        return res.status(400).json({
-          errors: ['Usuario n existente'],
-        });
-      }
-
-      const patient = await Patient.create({
-        name,
-        age,
-        weight,
-        height,
-        user_id,
+      const patient = await PatientService.store({
+        ...req.data,
+        user_id: req.userId,
       });
-
       return res.json(patient);
     } catch (e) {
       return res.status(400).json({
@@ -39,53 +24,27 @@ class PatientController {
     }
   }
 
-  // async show(req, res) {
-  //   try {
-  //     const { id } = req.params;
+  async show(req, res) {
+    try {
+      const user_id = req.userId;
+      const ID = req.filter.id;
+      const patient = await PatientService.show(ID, user_id);
 
-  //     if (!id) {
-  //       return res.status(400).json({
-  //         errors: ['Faltando id'],
-  //       });
-  //     }
-
-  //     const patient = await Patient.findByPk(id);
-
-  //     if (!patient) {
-  //       return res.status(400).json({
-  //         errors: ['paciente nao existe'],
-  //       });
-  //     }
-
-  //     return res.json(patient);
-  //   } catch (e) {
-  //     return res.status(400).json({
-  //       errors: e.errors.map((err) => err.mensage),
-  //     });
-  //   }
-  // }
+      return res.json(patient);
+    } catch (e) {
+      return res.status(400).json({
+        errors: e.errors.map((err) => err.mensage),
+      });
+    }
+  }
 
   async delete(req, res) {
     try {
-      const { id } = req.params;
-
-      if (!id) {
-        return res.status(400).json({
-          errors: ['Faltando id'],
-        });
-      }
-
-      const patient = await Patient.findByPk(id);
-
-      if (!patient) {
-        return res.status(400).json({
-          errors: ['paciente nao existe'],
-        });
-      }
-
-      await patient.destroy();
+      const ID = req.filter.id;
+      const userID = req.userId;
+      await PatientService.delete(ID, userID);
       return res.json({
-        apagado: true,
+        Paciente_apagado: true,
       });
     } catch (e) {
       return res.status(400).json({
@@ -96,25 +55,12 @@ class PatientController {
 
   async update(req, res) {
     try {
-      const { id } = req.params;
+      const ID = req.filter.id;
+      const user_id = req.userId;
 
-      if (!id) {
-        return res.status(400).json({
-          errors: ['Faltando id'],
-        });
-      }
+      await PatientService.update(req.data, ID, user_id);
 
-      const patient = await Patient.findByPk(id);
-
-      if (!patient) {
-        return res.status(400).json({
-          errors: ['paciente nao existe'],
-        });
-      }
-
-      const updatedPatient = await patient.update(req.body);
-
-      return res.json(updatedPatient);
+      return res.json('Paciente atualizado');
     } catch (e) {
       return res.status(400).json({
         errors: e.errors.map((err) => err.mensage),

@@ -42,8 +42,11 @@ export default class User extends Model {
       },
     }, {
       sequelize,
+      paranoid: true,
       modelName: 'user',
       tableName: 'users',
+      deletedAt: 'deleted_at',
+
     });
 
     this.addHook('beforeSave', async (user) => {
@@ -56,7 +59,7 @@ export default class User extends Model {
   }
 
   static associate(models) {
-    this.hasMany(models.patient, { foreignKey: 'user_id', as: 'patients' });
+    this.hasMany(models.patient, { foreignKey: 'user_id' });
   }
 
   passwordIsValid(password) {

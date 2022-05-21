@@ -1,28 +1,16 @@
-import User from '../models/User';
-// import BaseController from './BaseController';
-// import UserService from '../services/UserService';
+import UserService from '../services/UserService';
 
 class UserController {
-  // constructor() {
-  //   super();
-
-  //   this.storeAction = this.storeAction.bind(this);
-  //   // this.index = this.index.bind(this);
-  //   // this.store = this.store.bind(this);
-  //   // this.store = this.store.bind(this);
-  //   // this.store = this.store.bind(this);
-  // }
-
   async store(req, res) {
-    try {
-      const data = req.body;
-      const { name, email, id } = await User.create(data);
-      // const { email, name, id } = await UserService.store(data);
+    if (!req.data) {
+      return res.status(400).json({ errors: ['Favor preencher os campos obrigatorios'] });
+    }
 
-      return res.json({ name, email, id });
-      // this.handleResponse(res, { email, name, id });
+    try {
+      const newUser = await UserService.store(req.data);
+
+      return res.json(newUser);
     } catch (e) {
-      // this.handleError(res, e);
       return res.status(400).json({
         errors: e.errors.map((err) => err.message),
       });
@@ -31,17 +19,12 @@ class UserController {
 
   async index(req, res) {
     try {
-      const users = await User.findAll();
+      if (req.filter.id) {
+        const user = await UserService.show(req.filter.id);
+        return res.json(user);
+      }
+      const users = await UserService.index();
       return res.json(users);
-    } catch (e) {
-      return res.json(null);
-    }
-  }
-
-  async show(req, res) {
-    try {
-      const user = await User.findByPk(req.params.id);
-      return res.json(user);
     } catch (e) {
       return res.json(null);
     }
@@ -49,19 +32,12 @@ class UserController {
 
   async update(req, res) {
     try {
-      const user = await User.findByPk(req.userId);
-      if (!user) {
-        return res.status(400).json({
-          errors: ['Usuario n existe'],
-        });
+      if (!req.data) {
+        res.status(400).json({ errors: ['Favor preencher pelo menos um campo'] });
       }
 
-      const {
-        name, email, id,
-      } = await user.update(req.body);
-      return res.json({
-        name, email, id,
-      });
+      await UserService.update(req.data, req.userId);
+      return res.json('Usuario atualizado');
     } catch (e) {
       return res.json(null);
     }
@@ -69,16 +45,9 @@ class UserController {
 
   async delete(req, res) {
     try {
-      const user = await User.findByPk(req.userId);
+      await UserService.delete(req.userId);
 
-      if (!user) {
-        return res.status(400).json({
-          errors: ['Usuario n existe'],
-        });
-      }
-
-      await user.destroy(req.body);
-      return res.json(user.name);
+      return res.json({ usuario: 'deletado' });
     } catch (e) {
       return res.json(null);
     }

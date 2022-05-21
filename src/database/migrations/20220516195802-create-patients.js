@@ -18,8 +18,8 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      age: {
-        type: Sequelize.INTEGER,
+      borned_at: {
+        type: Sequelize.DATEONLY,
         allowNull: false,
       },
       weight: {
@@ -33,6 +33,10 @@ module.exports = {
       created_at: {
         type: Sequelize.DATE,
         allowNull: false,
+      },
+      deleted_at: {
+        type: Sequelize.DATE,
+        allowNull: true,
       },
       updated_at: {
         type: Sequelize.DATE,
