@@ -1,12 +1,13 @@
 import PatientService from '../services/PatientService';
+import BaseController from './BaseController';
 
 class PatientController {
   async index(req, res) {
     try {
       const patients = await PatientService.index(req.userId);
-      res.json(patients);
+      return BaseController.handleResponse(res, patients);
     } catch (e) {
-      console.log(e);
+      return BaseController.handleError(res, 'ocorreu um erro inesperado');
     }
   }
 
@@ -16,11 +17,9 @@ class PatientController {
         ...req.data,
         user_id: req.userId,
       });
-      return res.json(patient);
+      return BaseController.handleResponse(res, patient);
     } catch (e) {
-      return res.status(400).json({
-        errors: e.errors.map((err) => err.message),
-      });
+      return BaseController.handleError(res, e);
     }
   }
 
@@ -30,11 +29,9 @@ class PatientController {
       const ID = req.filter.id;
       const patient = await PatientService.show(ID, user_id);
 
-      return res.json(patient);
+      return BaseController.handleResponse(res, patient);
     } catch (e) {
-      return res.status(400).json({
-        errors: e.errors.map((err) => err.mensage),
-      });
+      return BaseController.handleError(res, e);
     }
   }
 
@@ -43,13 +40,9 @@ class PatientController {
       const ID = req.filter.id;
       const userID = req.userId;
       await PatientService.delete(ID, userID);
-      return res.json({
-        Paciente_apagado: true,
-      });
+      return BaseController.handleResponse(res, { patiente_apagado: true });
     } catch (e) {
-      return res.status(400).json({
-        errors: e.errors.map((err) => err.mensage),
-      });
+      return BaseController.handleError(res, e);
     }
   }
 
@@ -60,11 +53,9 @@ class PatientController {
 
       await PatientService.update(req.data, ID, user_id);
 
-      return res.json('Paciente atualizado');
+      return BaseController.handleResponse(res, { patiente_atualizado: true });
     } catch (e) {
-      return res.status(400).json({
-        errors: e.errors.map((err) => err.mensage),
-      });
+      return BaseController.handleError(res, e);
     }
   }
 }

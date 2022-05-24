@@ -1,0 +1,32 @@
+import multer from 'multer';
+import multerConfig from '../config/multer';
+import FotoService from '../services/FotoService';
+
+const upload = multer(multerConfig).single('foto');
+
+class FotoController {
+  store(req, res) {
+    return upload(req, res, async (error) => {
+      try {
+        if (error) {
+          return res.status(400).json({
+            errors: [error.code],
+          });
+        }
+
+        const { patient_id } = req.body;
+
+        const profilepic = await FotoService.storeFoto(req.file, patient_id, req.userId);
+
+        return res.json(profilepic);
+      } catch (e) {
+        return console.log(e);
+        // return res.status(400).json({
+        // errors: e.errors.map((err) => err.mensage),
+        // });
+      }
+    });
+  }
+}
+
+export default new FotoController();

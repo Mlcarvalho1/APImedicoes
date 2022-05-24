@@ -12,7 +12,8 @@ export default {
     if (user) {
       return { errors: ['Usuario ja cadastrado'] };
     }
-    return User.create(data);
+    const { name, id, email } = await User.create(data);
+    return { name, id, email };
   },
   show: async (id) => {
     const user = await User.findByPk(id, {

@@ -1,4 +1,5 @@
 import UserService from '../services/UserService';
+import BaseController from './BaseController';
 
 class UserController {
   async store(req, res) {
@@ -9,11 +10,9 @@ class UserController {
     try {
       const newUser = await UserService.store(req.data);
 
-      return res.json(newUser);
+      return BaseController.handleResponse(res, newUser);
     } catch (e) {
-      return res.status(400).json({
-        errors: e.errors.map((err) => err.message),
-      });
+      return BaseController.handleError(res, e);
     }
   }
 
@@ -21,12 +20,12 @@ class UserController {
     try {
       if (req.filter.id) {
         const user = await UserService.show(req.filter.id);
-        return res.json(user);
+        return BaseController.handleResponse(res, user);
       }
       const users = await UserService.index();
-      return res.json(users);
+      return BaseController.handleResponse(res, users);
     } catch (e) {
-      return res.json(null);
+      return BaseController.handleError(res, null);
     }
   }
 
@@ -37,9 +36,9 @@ class UserController {
       }
 
       await UserService.update(req.data, req.userId);
-      return res.json('Usuario atualizado');
+      return BaseController.handleResponse(res, 'Usuario atualizado');
     } catch (e) {
-      return res.json(null);
+      return BaseController.handleError(res, null);
     }
   }
 
@@ -47,9 +46,9 @@ class UserController {
     try {
       await UserService.delete(req.userId);
 
-      return res.json({ usuario: 'deletado' });
+      return BaseController.handleResponse(req, { usuario: 'deletado' });
     } catch (e) {
-      return res.json(null);
+      return BaseController.handleError(res, null);
     }
   }
 }

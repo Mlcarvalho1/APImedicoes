@@ -2,15 +2,15 @@ import dotenv from 'dotenv';
 
 // dotenv.config();
 
-import './src/database';
+import './backend/src/database';
 
 import express from 'express';
-import homeRoutes from './src/routes/home';
-import userRoutes from './src/routes/userRoutes';
-import fotoRoutes from './src/routes/fotoRoutes';
-import measurementRoutes from './src/routes/measurementRoutes';
-import tokenRoutes from './src/routes/tokenRoutes';
-import patientRoutes from './src/routes/patientRoutes';
+import homeRoutes from './backend/src/routes/home';
+import userRoutes from './backend/src/routes/userRoutes';
+import fotoRoutes from './backend/src/routes/fotoRoutes';
+import measurementRoutes from './backend/src/routes/measurementRoutes';
+import tokenRoutes from './backend/src/routes/tokenRoutes';
+import patientRoutes from './backend/src/routes/patientRoutes';
 
 class App {
   constructor() {
