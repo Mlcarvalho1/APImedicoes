@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 // dotenv.config();
 
@@ -21,6 +22,7 @@ class App {
   middlewares() {
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(express.json());
+    this.app.use(cors());
   }
 
   routes() {

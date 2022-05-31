@@ -1,20 +1,18 @@
 <h1>cadastro</h1>
-
-
-<div class="container" ng-controller="userCtrl" ng-model="measurementsApp" id="signin-form">
+<div class="container" ng-controller="userCtrl" ng-model="user" id="signin-form">
     <form  name="userForm">
         <br>
-        nome:<input type="text" ng-required="true" class="form-control" ng-model="userForm.name">
-        email:<input type="email" ng-required="true" class="form-control" ng-model="userForm.email" >
-        <div ng-show="userForm.$error.email[0].$dirty && userForm.$error.email[0].$invalid"  class="alert alert-danger">
+        nome:<input type="text" ng-required="true" class="form-control" ng-model="user.name">
+        email:<input type="email" ng-required="true" class="form-control" ng-model="user.email" >
+        <div ng-show="userForm.$dirty && !user.email"  class="alert alert-danger">
             por favor, preencha o email corretamente!
         </div>
-        senha:<input type="password" ng-required="true" class="form-control" ng-model="userForm.password">
-        confirmar senha:<input type="password" ng-required="true" class="form-control" ng-model="userForm.passworConfirmation" >
+        senha:<input type="password" ng-required="true" class="form-control" ng-model="user.password">
+        confirmar senha:<input type="password" ng-required="true" class="form-control" ng-model="user.password_confirmation" >
     </form>
     <div ng-show="userForm.$invalid && userForm.$dirty" class="alert alert-danger">
         por favor, preencha o formulario completo!
     </div>
-    {{userForm.email.$valid}}
-    <button type="button" class="btn btn-primary" id="submit" ng-disabled="userForm.$invalid">Enviar</button> <br>
+    
+    <button type="button" class="btn btn-primary" id="submit" ng-disabled="userForm.$invalid" ng-click="addUser()">Enviar</button> <br>
 </div>

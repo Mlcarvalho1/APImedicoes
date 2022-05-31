@@ -3,6 +3,7 @@ angular.module("measurementsApp").config(function ($routeProvider) {
 
     $routeProvider.when("/signin", {
         templateUrl: "./views/signin.html",
+        controller: "userCtrl"
         });
 
     $routeProvider.when("/login", {

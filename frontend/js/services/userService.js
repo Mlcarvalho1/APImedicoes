@@ -1,6 +1,8 @@
-angular.module('measurementsApp').factory('userService', function($http, config){
-    const addUser = async user => {
-        const { data } = await $http.post(config.baseUrl + '/user', user)
-        return data
+angular.module('measurementsApp').factory('userService', function($http) {
+    const create = user => $http.post(`http://localhost:3000/users`, user);
+    
+
+    return {
+        create
     }
 })
