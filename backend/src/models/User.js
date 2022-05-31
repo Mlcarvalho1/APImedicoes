@@ -40,6 +40,17 @@ export default class User extends Model {
           },
         },
       },
+      password_confirmation: {
+        type: Sequelize.VIRTUAL,
+        defaultValue: '',
+        validate: {
+          isPasswordEqual() {
+            if (this.password_confirmation !== this.password) {
+              throw new Error('senha diferente da confirmacao');
+            }
+          },
+        },
+      },
     }, {
       sequelize,
       paranoid: true,

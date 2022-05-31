@@ -1,0 +1,14 @@
+<h1>Adicione sua medicao</h1>
+
+
+<div class="container" ng-controller="userCtrl" ng-model="measurementsApp" id="signin-form">
+    <form  name="measurementForm">
+        <br>
+        Glicemia:<input type="number"  class="form-control" ng-model="measurementForm.glucose">
+        Carboidratos ingeridos:<input type="number" class="form-control" ng-model="measurementForm.carbs" >
+        Insulina aplicada:<input type="number"  class="form-control" ng-model="measurementForm.insulin">
+        Horario da medicao:<input type="datetime-local"  ng-required="true"  class="form-control" ng-model="measurementForm.time" >
+    </form>
+    
+    <button type="button" class="btn btn-secondary" id="submit" ng-disabled="measurementForm.$invalid">Enviar</button> <br>
+</div>

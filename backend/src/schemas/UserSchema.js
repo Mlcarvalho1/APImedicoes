@@ -6,6 +6,7 @@ const schema = {
       name: Yup.string().required().min(3).max(255),
       email: Yup.string().email().required(),
       password: Yup.string().required().min(8).max(50),
+      password_confirmation: Yup.string().required(),
     }),
   },
   update: {

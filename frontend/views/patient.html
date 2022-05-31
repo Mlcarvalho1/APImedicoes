@@ -1,0 +1,79 @@
+<div class="container">
+    <div class="card" style="width: 18rem;" id="profile-card">
+        
+        <div class="card-body">
+          <h5 class="card-title">"Patient Name"</h5>
+          <p class="card-text">idade:</p>
+          <p class="card-text">peso:</p>
+          <p class="card-text">altura:</p>
+          <p class="card-text">media glicemica:</p>
+          <p class="card-text">hemoglobina glicada estimada:</p>
+        </div>
+      </div>
+      <div class="card" style="width: 45rem; height: 21rem;" id="patients-card">
+        <div class="card-body">
+          <h5 class="card-title" style="float: left ;">Medicoes</h5>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Data</th>
+                <th scope="col">Glicemia</th>
+                <th scope="col">Carboidratos consumidos</th>
+                <th scope="col">Insulina aplicada</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">12:35</th>
+                <td>125mg/dL</td>
+                <td>30g</td>
+                <td>2u</td>
+              </tr>
+              <tr>
+                   
+                    <th scope="row">14:22</th>
+                    <td>140</td>
+                    <td>-</td>
+                    <td>-</td>
+                    
+                </tr>
+              <tr>
+                <th scope="row">18:30</th>
+                <td >132mg/dL</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+            </tbody>
+          </table>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Criar medicao
+          </button>
+          <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Medicao</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form  name="measurementForm">
+                      <br>
+                      Glicemia:<input type="number"  class="form-control" ng-model="measurementForm.glucose">
+                      Carboidratos ingeridos:<input type="number" class="form-control" ng-model="measurementForm.carbs" >
+                      Insulina aplicada:<input type="number"  class="form-control" ng-model="measurementForm.insulin">
+                      Horario da medicao:<input type="datetime-local"  ng-required="true"  class="form-control" ng-model="measurementForm.time" >
+                  </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" ng-disabled="measurementForm.$invalid" >Salvar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <a href=""><button type="button" class="btn btn-danger" style="float: right ;">Deletar medicao</button></a>
+
+        </div>
+      </div>
+</div>
