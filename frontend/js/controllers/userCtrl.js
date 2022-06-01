@@ -1,30 +1,10 @@
-angular.module("measurementsApp").controller('userCtrl', function($scope, userService){
+angular.module("measurementsApp").controller('userCtrl', function($scope, userService, $location){
     $scope.model = "user";    
 
-    const addUser = () => {
-        userService.create($scope.user)
-            .then(() => {
-                Swal.fire({
-                    position: 'top-end',
-                    icon: 'success',
-                    title: 'Usuario cadastrado do sucesso',
-                    showConfirmButton: false,
-                    timer: 1500
-                  })
-                delete $scope.user;
-                $scope.userForm.$setPristine();
-            })
-            .catch(error => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: error.data.error,
-                  })
-            
-
-                console.log(error)})
+    const init = () => {
+        console.log('iniciado');
+        // listPatients();
     };
-
 
     const editUser = () => {
         userService.edit($scope.user)
@@ -32,12 +12,28 @@ angular.module("measurementsApp").controller('userCtrl', function($scope, userSe
                 
             })
             .catch(error => {
-                console.log(error)
+                console.log(error);
+            });
+    };
+
+    const listPatients = () => {
+        userService.show(localStorage.getItem('token'))
+            .then((resp) => {
+                console.log(resp)
             })
-    }
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: error,
+                  });
+            
+                console.log(error);
+            });
+    };
 
+    init();
 
-    $scope.editUser = editUser
-    $scope.addUser = addUser
+    $scope.editUser = editUser;
 
 })

@@ -18,12 +18,8 @@ class UserController {
 
   async index(req, res) {
     try {
-      if (req.filter.id) {
-        const user = await UserService.show(req.filter.id);
-        return BaseController.handleResponse(res, user);
-      }
-      const users = await UserService.index();
-      return BaseController.handleResponse(res, users);
+      const user = await UserService.show(req.userId);
+      return BaseController.handleResponse(res, user);
     } catch (e) {
       return BaseController.handleError(res, null);
     }

@@ -25,6 +25,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "angular-swx-local-storage": "^1.0.0",
     "editorconfig": "^0.15.3",
     "eslint": "^8.15.0",
     "eslint-config-airbnb-base": "^15.0.0",

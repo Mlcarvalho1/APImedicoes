@@ -7,7 +7,7 @@ class TokenCntroller {
 
     if (!email || !password) {
       return res.status(400).json({
-        erros: ['Credenciais invalidas'],
+        msg: 'Credenciais invalidas',
       });
     }
 
@@ -15,13 +15,13 @@ class TokenCntroller {
 
     if (!user) {
       return res.status(400).json({
-        erros: ['Credenciais invalidas'],
+        msg: 'Credenciais invalidas',
       });
     }
 
     if (!(await user.passwordIsValid(password))) {
       return res.status(401).json({
-        erros: ['Credenciais invalidas'],
+        msg: 'Credenciais invalidas',
       });
     }
 

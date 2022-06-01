@@ -3,7 +3,6 @@ angular.module("measurementsApp").config(function ($routeProvider) {
 
     $routeProvider.when("/signin", {
         templateUrl: "./views/signin.html",
-        controller: "userCtrl"
         });
 
     $routeProvider.when("/login", {
@@ -11,7 +10,7 @@ angular.module("measurementsApp").config(function ($routeProvider) {
         });
 
 
-    $routeProvider.when("/profile",{
+    $routeProvider.when("/users",{
         templateUrl:"./views/profilePage.html"
     })
 

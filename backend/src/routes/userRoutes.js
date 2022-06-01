@@ -7,7 +7,7 @@ import UserSchema from '../schemas/UserSchema';
 
 const router = new Router();
 
-router.get('/:id?', Validate(UserSchema.show), Usercontroller.index);
+router.get('/', Validate(UserSchema.show), loginRequired, Usercontroller.index);
 router.post('/', Validate(UserSchema.store), Usercontroller.store);
 router.put('/', Validate(UserSchema.update), loginRequired, Usercontroller.update);
 router.delete('/', Validate(UserSchema.delete), loginRequired, Usercontroller.delete);
