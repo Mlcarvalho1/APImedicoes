@@ -1,8 +1,8 @@
-angular.module('measurementsApp').factory('userService', function($http) {
-    const create = user => $http.post(`http://localhost:3000/users`, user);
-    
-
+angular.module('measurementsApp').factory('userService', function($http, config) {
+    const create = user => $http.post(`${config.baseUrl}/users`, user);
+    const edit = user => $http.put(`${config.baseUrl}/users`, user)
     return {
-        create
+        create,
+        edit
     }
 })

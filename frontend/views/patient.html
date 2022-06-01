@@ -8,6 +8,33 @@
           <p class="card-text">altura:</p>
           <p class="card-text">media glicemica:</p>
           <p class="card-text">hemoglobina glicada estimada:</p>
+          <button style="float: right ;" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#patientEditModal">
+            editar
+          </button>
+          <div class="modal fade" id="patientEditModal" tabindex="-1" aria-labelledby="patientEditModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="patientEditModalLabel">Modal title</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form  name="patientForm">
+                    <br>
+                    nome:<input type="text" class="form-control" ng-model="patientForm.name">
+                    weight:<input type="number" class="form-control" ng-model="patientForm.weight" >
+                    height:<input type="number" class="form-control" ng-model="patientForm.height">
+                    Data de nascimento:<input type="date" class="form-control" ng-model="patientForm.bornedAt" >
+                </form>
+                <button type="button" class="btn btn-secondary" id="submit" ng-disabled="">Enviar</button> <br>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="card" style="width: 45rem; height: 21rem;" id="patients-card">
@@ -20,6 +47,7 @@
                 <th scope="col">Glicemia</th>
                 <th scope="col">Carboidratos consumidos</th>
                 <th scope="col">Insulina aplicada</th>
+                <th scope="col"> </th>
               </tr>
             </thead>
             <tbody>
@@ -28,6 +56,17 @@
                 <td>125mg/dL</td>
                 <td>30g</td>
                 <td>2u</td>
+                <td><div class="dropdown">
+                  <button class="btn btn-secondary" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li><a class="dropdown-item" href="#">edit</a></li>
+                    <li><a class="dropdown-item" href="#">delete</a></li>
+                  </ul>
+                </div>
+              </td>
+
               </tr>
               <tr>
                    
@@ -35,25 +74,47 @@
                     <td>140</td>
                     <td>-</td>
                     <td>-</td>
-                    
+                    <td>
+                      <div class="dropdown">
+                        <button class="btn btn-secondary" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                          <i class="fa fa-angle-down" aria-hidden="true"></i>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                          <li><a class="dropdown-item" href="#">edit</a></li>
+                          <li><a class="dropdown-item" href="#">delete</a></li>
+                        </ul>
+                      </div>
+                    </td>
+
                 </tr>
               <tr>
                 <th scope="row">18:30</th>
                 <td >132mg/dL</td>
                 <td>-</td>
                 <td>-</td>
+                <td>
+                  <div class="dropdown">
+                    <button class="btn btn-secondary" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fa fa-angle-down" aria-hidden="true"></i>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                      <li><a class="dropdown-item" href="#">edit</a></li>
+                      <li><a class="dropdown-item" href="#">delete</a></li>
+                    </ul>
+                  </div>
+                </td>
               </tr>
             </tbody>
           </table>
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#measurementCreationModal">
             Criar medicao
           </button>
           <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="measurementCreationModal" tabindex="-1" aria-labelledby="measurementCreationModalLabel" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Medicao</h5>
+                    <h5 class="modal-title" id="measurementCreationModalLabel">Medicao</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
@@ -72,7 +133,6 @@
                 </div>
               </div>
             </div>
-          <a href=""><button type="button" class="btn btn-danger" style="float: right ;">Deletar medicao</button></a>
 
         </div>
       </div>

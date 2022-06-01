@@ -3,8 +3,31 @@
         <img class="card-img-top" src="../uploads/profilepic.jpg" alt="Card image cap" id="profile-card-image">
         <div class="card-body">
           <h5 class="card-title">User Name</h5>
-          <p class="card-text">Name:</p>
-          <p class="card-text">Email:</p>
+          <p class="card-text";">Email:</p>
+          <button style="float: right ;" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#userEditModal">
+            Editar
+          </button>
+          <div class="modal fade" id="userEditModal" tabindex="-1" aria-labelledby="userEditModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="userEditModalLabel">Modal title</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form  name="userForm">
+                    <br>
+                    nome:<input type="text" class="form-control" ng-model="user.name">
+                    email:<input type="email" class="form-control" ng-model="user.email" >
+                </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                  <button type="button" class="btn btn-primary" ng-click="editUser()">Salvar</button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="card" style="width: 45rem; height: 21rem;" id="patients-card">
@@ -17,6 +40,7 @@
                 <th scope="col">First</th>
                 <th scope="col">Last</th>
                 <th scope="col">Handle</th>
+                <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
@@ -25,6 +49,17 @@
                 <td>Mark</td>
                 <td>Otto</td>
                 <td>@mdo</td>
+                <td>
+                  <div class="dropdown">
+                    <button class="btn btn-secondary" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fa fa-angle-down" aria-hidden="true"></i>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                      <li><a class="dropdown-item" href="#">edit</a></li>
+                      <li><a class="dropdown-item" href="#">delete</a></li>
+                    </ul>
+                  </div>
+                </td>
               </tr>
               <tr>
                    
@@ -32,25 +67,46 @@
                     <td><a href="http://127.0.0.1:5500/index.html#!/patient"> Jacob</a></td>
                     <td>Thornton</td>
                     <td>@fat</td>
+                    <td>
+                      <div class="dropdown">
+                        <button class="btn btn-secondary" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                          <i class="fa fa-angle-down" aria-hidden="true"></i>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                          <li><a class="dropdown-item" href="#">edit</a></li>
+                          <li><a class="dropdown-item" href="#">delete</a></li>
+                        </ul>
+                      </div>
+                    </td>
                     
                 </tr>
               <tr>
                 <th scope="row">3</th>
                 <td colspan="2">Larry the Bird</td>
                 <td>@twitter</td>
+                <td>
+                  <div class="dropdown">
+                    <button class="btn btn-secondary" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fa fa-angle-down" aria-hidden="true"></i>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                      <li><a class="dropdown-item" href="#">edit</a></li>
+                      <li><a class="dropdown-item" href="#">delete</a></li>
+                    </ul>
+                  </div>
+                </td>
               </tr>
             </tbody>
           </table>
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          <button  type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#patientCreationModal">
             Criar paciente
           </button>
-          <a href=""><button type="button" class="btn btn-danger" style="float: right ;">Deletar paciente</button></a>
           <!-- Modal -->
-          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal fade" id="patientCreationModal" tabindex="-1" aria-labelledby="patientCreationModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Novo paciente</h5>
+                  <h5 class="modal-title" id="patientCreationModalLabel">Novo paciente</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">

@@ -3,7 +3,6 @@ import BaseController from './BaseController';
 
 class UserController {
   async store(req, res) {
-    console.log('oaspdospadop');
     if (!req.data) {
       return res.status(400).json({ errors: ['Favor preencher os campos obrigatorios'] });
     }

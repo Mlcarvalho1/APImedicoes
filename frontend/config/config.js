@@ -1,3 +1,3 @@
-angular.module("measurementApp").value("config", {
+angular.module("measurementsApp").constant("config", {
     baseUrl: "http://localhost:3000",
 });

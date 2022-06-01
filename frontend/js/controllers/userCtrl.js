@@ -4,6 +4,7 @@ angular.module("measurementsApp").controller('userCtrl', function($scope, userSe
     const addUser = () => {
         userService.create($scope.user)
             .then(() => {
+                alert('Usuario cadastrado com sucesso!')
                 delete $scope.user;
                 $scope.userForm.$setPristine();
             })
@@ -13,6 +14,19 @@ angular.module("measurementsApp").controller('userCtrl', function($scope, userSe
                 console.log(error)})
     };
 
+
+    const editUser = () => {
+        userService.edit($scope.user)
+            .then(() => {
+                
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }
+
+
+    $scope.editUser = editUser
     $scope.addUser = addUser
 
 })
