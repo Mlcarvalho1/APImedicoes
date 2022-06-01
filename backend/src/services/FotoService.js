@@ -13,7 +13,7 @@ export default {
     });
 
     if (!patient) {
-      return { errors: ['este paciente nao existe'] };
+      throw new Error('este paciente nao existe');
     }
 
     const { filename, originalname, path } = file;

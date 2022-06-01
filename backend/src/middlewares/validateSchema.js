@@ -7,7 +7,7 @@ const Validate = (schema) => async (req, res, next) => {
     } : req.filter || null;
     next();
   } catch (e) {
-    res.status(401).json({ error: 'validation failed' });
+    res.status(401).json({ error: 'Falha na validacao' });
   }
 };
 

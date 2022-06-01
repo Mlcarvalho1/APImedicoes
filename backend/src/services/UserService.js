@@ -10,7 +10,7 @@ export default {
     });
 
     if (user) {
-      return { errors: ['Usuario ja cadastrado'] };
+      throw new Error('Email ja cadastrado');
     }
     const { name, id, email } = await User.create(data);
     return { name, id, email };
@@ -21,7 +21,7 @@ export default {
     });
 
     if (!user) {
-      return { errors: ['Usuario nao encontrado'] };
+      throw new Error('Usuario nao encontrado');
     }
 
     return { data: user };
@@ -42,7 +42,7 @@ export default {
     });
 
     if (!user) {
-      return { message: 'usuario não encontrado.' };
+      throw new Error('Usuario nao encontrado');
     }
     return user;
   },
@@ -50,7 +50,7 @@ export default {
   delete: async (id) => {
     const user = await User.findByPk(id);
     if (!user) {
-      return { errors: ['Usuario nao existe'] };
+      throw new Error('Usuario nao existe');
     }
 
     return user.destroy();

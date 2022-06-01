@@ -32,7 +32,7 @@ export default {
     });
 
     if (!measurement) {
-      return { errors: ['esta medicao nao existe'] };
+      throw new Error('esta medicao nao existe');
     }
 
     return measurement;
@@ -54,7 +54,7 @@ export default {
     });
 
     if (!measurements.length) {
-      return { errors: 'nenhuma medicao registrada nesse paciente' };
+      throw new Error('nenhuma medicao cadastrada neste paciente');
     }
 
     return measurements;
@@ -71,7 +71,7 @@ export default {
     });
 
     if (!measurement) {
-      return { errors: ['esta medicao nao existe'] };
+      throw new Error('esta medicao nao existe');
     }
 
     return measurement.destroy();
@@ -92,7 +92,7 @@ export default {
       },
     });
     if (!measurement) {
-      return { errors: ['medicao nao existe'] };
+      throw new Error('esta medicao nao existe');
     }
     return measurement;
   },

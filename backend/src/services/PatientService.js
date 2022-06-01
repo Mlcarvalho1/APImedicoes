@@ -11,7 +11,7 @@ export default {
     });
 
     if (totalPatients) {
-      return { erros: ['Paciente ja cadastrado'] };
+      throw new Error('Paciente ja cadastrado');
     }
 
     const {
@@ -36,7 +36,7 @@ export default {
       },
     });
     if (!patient) {
-      return { errors: ['paciente nao existe'] };
+      throw new Error('Paciente nao existe');
     }
 
     return patient;
@@ -64,7 +64,7 @@ export default {
     });
 
     if (!patient) {
-      return { errors: ['paciente nao existe'] };
+      throw new Error('Paciente nao existe');
     }
 
     return patient.destroy();
@@ -77,7 +77,7 @@ export default {
     });
 
     if (!patient) {
-      return { errors: ['Paciente não encontrado.'] };
+      throw new Error('Paciente nao encontrado');
     }
     return patient;
   },

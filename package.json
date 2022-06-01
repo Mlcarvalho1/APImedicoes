@@ -21,6 +21,7 @@
     "sanitize": "^2.1.0",
     "sequelize": "^6.19.0",
     "sucrase": "^3.21.0",
+    "sweetalert2": "^11.4.17",
     "yup": "^0.32.11"
   },
   "devDependencies": {
