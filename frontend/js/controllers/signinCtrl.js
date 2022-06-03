@@ -1,18 +1,19 @@
-angular.module("measurementsApp").controller("signinCtrl", function($scope, userService){
+angular.module("measurementsApp").controller("signinCtrl", function($scope, $location, userService){
     $scope.model = "signin" 
 
     const addUser = () => {
         userService.create($scope.user)
             .then(() => {
                 Swal.fire({
-                    position: 'top-end',
+                    position: 'top-center',
                     icon: 'success',
-                    title: 'Usuario cadastrado do sucesso',
+                    title: 'Usuario cadastrado com sucesso',
                     showConfirmButton: false,
                     timer: 1500
                   });
                 delete $scope.user;
                 $scope.userForm.$setPristine();
+                $location.path('/users');
             })
             .catch(error => {
                 Swal.fire({

@@ -1,4 +1,6 @@
-angular.module("measurementsApp").config(function ($routeProvider) {
+const myapp = angular.module("measurementsApp")
+
+myapp.config(function ($routeProvider) {
     $routeProvider.otherwise("/login");
 
     $routeProvider.when("/signin", {
@@ -14,7 +16,14 @@ angular.module("measurementsApp").config(function ($routeProvider) {
         templateUrl:"./views/profilePage.html"
     })
 
-    $routeProvider.when("/patient",{
+    $routeProvider.when("/patient/:id",{
         templateUrl:"./views/patient.html"
     })
+
 });
+
+myapp.config(function ($httpProvider) {
+
+    $httpProvider.interceptors.push('TokenInterceptor');
+   
+})

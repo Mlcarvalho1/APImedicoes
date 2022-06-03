@@ -26,6 +26,9 @@ a {
     margin-left: 11em
 }
 
+#header-dropdown{
+    margin-right: 20px;
+}
 
 #signin-form{
     width: 30rem;
