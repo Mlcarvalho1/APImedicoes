@@ -1,1 +1,1 @@
-angular.module("measurementsApp", ["ngRoute", 'ui.bootstrap']);
+angular.module("measurementsApp", ["ngRoute", 'ui.bootstrap', 'ui.router']);

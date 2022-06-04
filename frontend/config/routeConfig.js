@@ -17,7 +17,8 @@ myapp.config(function ($routeProvider) {
     })
 
     $routeProvider.when("/patient/:id",{
-        templateUrl:"./views/patient.html"
+        templateUrl:"./views/patient.html",
+        controller: 'patientCtrl'
     })
 
 });

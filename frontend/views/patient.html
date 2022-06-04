@@ -1,12 +1,12 @@
-<div class="container" ng-controller="patientCtrl">
+<div class="container">
     <div class="card" style="width: 18rem;" id="profile-card">
         
         <div class="card-body">
-          <h5 class="card-title">"Patient Name"</h5>
-          <p class="card-text">idade:</p>
-          <p class="card-text">peso:</p>
-          <p class="card-text">altura:</p>
-          <p class="card-text">media glicemica:</p>
+          <h5 class="card-title">{{patientData.name}} </h5>
+          <p class="card-text">idade: {{patientData.age}} Anos</p>
+          <p class="card-text">peso: {{patientData.weight}} Kg</p>
+          <p class="card-text">altura: {{patientData.height}} M</p>
+          <p class="card-text">media glicemica: </p>
           <p class="card-text">hemoglobina glicada estimada:</p>
           <button style="float: right ;" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#patientEditModal">
             editar
@@ -37,9 +37,20 @@
           </div>
         </div>
       </div>
-      <div class="card" style="width: 45rem; height: 21rem;" id="patients-card">
+      <div class="card" style="width: 45rem;" id="patients-card">
         <div class="card-body">
           <h5 class="card-title" style="float: left ;">Medicoes</h5>
+          <div class="input-group mb-3">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Ordenar por</button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" ng-click="orderBy('id')">Data de medicao</a></li>
+              <li><a class="dropdown-item" ng-click="orderBy('name')"></a></li>
+              <li><a class="dropdown-item" ng-click="orderBy('weight')">Peso</a></li>
+              <li><a class="dropdown-item" ng-click="orderBy('height')" >Altura</a></li>
+              <li><a class="dropdown-item" ng-click="orderBy('age')">Idade</a></li>
+            </ul>
+            <input type="text" class="form-control" aria-label="Text input with dropdown button" ng-model="patientSearch">
+          </div>
           <table class="table table-hover">
             <thead>
               <tr>
@@ -51,11 +62,11 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">12:35</th>
-                <td>125mg/dL</td>
-                <td>30g</td>
-                <td>2u</td>
+              <tr ng-repeat="measurement in measurementsData">
+                <th scope="row">{{measurement.created_at}}</th>
+                <td>{{measurement.glucose}}</td>
+                <td>{{measurement.carbs}}</td>
+                <td>{{measurement.insulin}}</td>
                 <td><div class="dropdown">
                   <button class="btn btn-secondary" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fa fa-angle-down" aria-hidden="true"></i>

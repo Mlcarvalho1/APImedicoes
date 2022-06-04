@@ -16,6 +16,10 @@ export default class Measurement extends Model {
         type: Sequelize.FLOAT,
         allowNull: true,
       },
+      measurement_date: {
+        type: Sequelize.DATE,
+        allowNull: false,
+      },
     }, {
       sequelize,
       paranoid: true,

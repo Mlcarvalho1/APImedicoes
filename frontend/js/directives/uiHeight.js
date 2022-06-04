@@ -10,6 +10,10 @@ angular.module("measurementsApp").directive("uiHeight", function(){
                     height = height.substring(0,1) + "." + height.substring(1)
                 }
 
+                if(height.length > 3){
+                    height = height.substring(0,4)
+                }
+
                 return height;
             }
 

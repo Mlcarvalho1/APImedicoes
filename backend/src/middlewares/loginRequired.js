@@ -5,7 +5,7 @@ export default (req, res, next) => {
 
   if (!authorization) {
     return res.status(401).json({
-      erros: ['Login required'],
+      msg: 'Voce precisa estar logado para acessar seu perfil',
     });
   }
 

@@ -28,7 +28,7 @@ class UserController {
   async update(req, res) {
     try {
       if (!req.data) {
-        res.status(400).json({ errors: ['Favor preencher pelo menos um campo'] });
+        res.status(400).json({ msg: 'Favor preencher pelo menos um campo' });
       }
 
       await UserService.update(req.data, req.userId);

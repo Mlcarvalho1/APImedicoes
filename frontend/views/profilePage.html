@@ -15,15 +15,18 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                  <form  name="userForm">
+                  <form  name="userEditForm">
                     <br>
-                    novo nome:<input type="text" class="form-control" ng-model="userEdit.name">
-                    novo email:<input type="email" class="form-control" ng-model="userEdit.email">
+                    novo nome:<input type="text" class="form-control" ng-model="userEdit.name" ng-maxlength="80" ng-required="true">
+                    novo email:<input type="email" class="form-control" ng-model="userEdit.email" ng-maxlength="80" ng-required="true">
+                    <div ng-show="userEditForm.$invalid && userEditForm.$dirty" class="alert alert-danger">
+                      Os campos devem ter no maximo 80 caracteres
+                    </div>
                 </form>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" ng-click="editUser()">Salvar</button>
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" ng-disabled="userEditForm.$invalid" ng-click="editUser()">Salvar</button>
                 </div>
               </div>
             </div>
@@ -91,10 +94,10 @@
                 <div class="modal-body" >
                   <form  name="patientForm">
                     <br>
-                    nome:<input type="text" ng-required="true" class="form-control" ng-model="patientCreate.name">
-                    peso:<input type="number" ng-required="true" class="form-control" ng-model="patientCreate.weight" >
-                    altura:<input type="text" ng-required="true" class="form-control" ng-model="patientCreate.height" ui-height>
-                    data de nascimento:<input type="date" ng-required="true" class="form-control" ng-model="patientCreate.borned_at" >
+                    nome:<input type="text" ng-required="true" class="form-control" ng-model="patientCreated.name" ng-maxlength="80">
+                    peso:<input type="text" ng-required="true" class="form-control" ng-model="patientCreated.weight" ui-weight>
+                    altura:<input type="text" ng-required="true" class="form-control" ng-model="patientCreated.height" ui-height >
+                    data de nascimento:<input type="date" ng-required="true" class="form-control" ng-model="patientCreated.borned_at" max="{{today}}">
                     <div ng-show="patientForm.$invalid && patientForm.$dirty"  class="alert alert-danger">
                       Todos os campos sao obrigatorios
                     </div>
@@ -114,21 +117,24 @@
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="patientCreationModalLabel">Editar Paciente</h5>
+                <h5 class="modal-title" id="patientEditionModalLabel">Editar Paciente</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body" >
-                <form  name="patientForm">
+                <form  name="patientEditionForm">
                   <br>
-                  nome:<input type="text" class="form-control" ng-model="patientEdit.name" ng-maxlength="50">
-                  peso:<input type="number" class="form-control" ng-model="patientEdit.weight" ng-maxlength="5">
-                  altura:<input type="text" class="form-control" ng-model="patientEdit.height" ui-height ng-maxlength="3">
-                  data de nascimento:<input type="date" class="form-control" ng-model="patientEdit.borned_at" max="{{today}}">
+                  nome:<input type="text" class="form-control" ng-model="patientEdit.name" ng-maxlength="80">
+                  <div ng-show="patientEditionForm.$invalid && patientEditionForm.$dirty"  class="alert alert-danger">
+                    O nome deve ter no maximo 80 caracteres
+                  </div>
+                  peso:<input type="text" class="form-control" ng-model="patientEdit.weight" ui-weight ng-maxlength="3">
+                  altura:<input type="text" class="form-control" ng-model="patientEdit.height" ui-height ng-maxlength="4">
+                  data de nascimento:<input type="date" class="form-control" ng-model="patientEdit.borned_at" max="{{today}}" ng-required="false">
                 </form>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" ng-click="editPatient()">Salvar</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" ng-disabled="patientEditionForm.$invalid" ng-click="editPatient()">Salvar</button>
               </div>
             </div>
           </div>

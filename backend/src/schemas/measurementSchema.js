@@ -6,6 +6,7 @@ const schema = {
       insulin: Yup.number(),
       carbs: Yup.number(),
       glucose: Yup.number(),
+      measurement_date: Yup.date(),
     }),
     params: Yup.object().shape({
       patient_id: Yup.number().required(),
@@ -16,6 +17,7 @@ const schema = {
       insulin: Yup.number(),
       carbs: Yup.number(),
       glucose: Yup.number(),
+      measurement_date: Yup.date(),
     }),
     params: Yup.object().shape({
       id: Yup.number().required(),

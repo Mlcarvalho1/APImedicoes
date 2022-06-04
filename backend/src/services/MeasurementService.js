@@ -28,7 +28,7 @@ export default {
         },
         attributes: [],
       },
-      attributes: ['glucose', 'carbs', 'insulin'],
+      attributes: ['glucose', 'carbs', 'insulin', 'measurement_date'],
     });
 
     if (!measurement) {
@@ -50,7 +50,7 @@ export default {
         },
         attributes: [],
       },
-      attributes: ['glucose', 'carbs', 'insulin'],
+      attributes: ['glucose', 'carbs', 'insulin', 'measurement_date'],
     });
 
     if (!measurements.length) {

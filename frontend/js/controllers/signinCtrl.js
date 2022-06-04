@@ -10,10 +10,11 @@ angular.module("measurementsApp").controller("signinCtrl", function($scope, $loc
                     title: 'Usuario cadastrado com sucesso',
                     showConfirmButton: false,
                     timer: 1500
-                  });
-                delete $scope.user;
-                $scope.userForm.$setPristine();
-                $location.path('/users');
+                  })
+                    delete $scope.user;
+                    $scope.userForm.$setPristine();
+                    $location.path('/login');
+                
             })
             .catch(error => {
                 Swal.fire({
@@ -21,7 +22,7 @@ angular.module("measurementsApp").controller("signinCtrl", function($scope, $loc
                     title: 'Oops...',
                     text: error.data.error,
                   });
-            
+            console.log(error)
 
                 });
     };

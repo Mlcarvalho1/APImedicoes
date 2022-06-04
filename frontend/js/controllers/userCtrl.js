@@ -60,7 +60,7 @@ angular.module("measurementsApp").controller('userCtrl', function($scope, userSe
     };
 
     const addPatient = () => {
-        patientService.create($scope.patient)
+        patientService.create($scope.patientCreated)
             .then(() => {
                 Swal.fire({
                     position: 'top-center',
@@ -69,7 +69,7 @@ angular.module("measurementsApp").controller('userCtrl', function($scope, userSe
                     showConfirmButton: false,
                     timer: 1500
                   });
-                delete $scope.patient;
+                delete $scope.patientCreated;
                 $scope.patientForm.$setPristine();
                 init()
             })
@@ -134,7 +134,7 @@ angular.module("measurementsApp").controller('userCtrl', function($scope, userSe
     }
 
     const listPacients = () => {
-        patientService.index(localStorage.getItem('token'))
+        patientService.index()
             .then((resp) => {
                 const patients = resp.data.map((obj) => {
                     const newObj = {...obj};
@@ -153,13 +153,13 @@ angular.module("measurementsApp").controller('userCtrl', function($scope, userSe
     };
 
     const getPatient = (patient) => {
-        $scope.patientEdit = patient
+        $scope.patientEdit = angular.copy(patient)
         
     }
 
     const goToPatient = (id) => {
         patientService.show(id)
-        $location.path(`/patient/{patient.id}`)
+        $location.path(`/patient/${id}`)
 
     }
 
