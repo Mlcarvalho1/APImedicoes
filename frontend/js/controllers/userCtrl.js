@@ -60,7 +60,7 @@ angular.module("measurementsApp").controller('userCtrl', function($scope, userSe
     };
 
     const addPatient = () => {
-        patientService.create($scope.patientCreated)
+        patientService.create($scope.createdPatient)
             .then(() => {
                 Swal.fire({
                     position: 'top-center',
@@ -69,7 +69,7 @@ angular.module("measurementsApp").controller('userCtrl', function($scope, userSe
                     showConfirmButton: false,
                     timer: 1500
                   });
-                delete $scope.patientCreated;
+                delete $scope.createdPatient;
                 $scope.patientForm.$setPristine();
                 init()
             })

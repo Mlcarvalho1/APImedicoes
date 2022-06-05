@@ -63,18 +63,17 @@
             </thead>
             <tbody>
               <tr ng-repeat="patient in patientsData | filter:patientSearch| orderBy: order">
-                <th scope="row">{{patient.id}}</th>
-                <td>{{patient.name}}</td>
-                <td>{{patient.weight}} Kg</td>
-                <td>{{patient.height}} M</td>
-                <td>{{patient.age}} </td>
+                <th scope="row" ng-click="goToPatient(patient.id)">{{patient.id}}</th>
+                <td scope="row" ng-click="goToPatient(patient.id)">{{patient.name}}</td>
+                <td scope="row" ng-click="goToPatient(patient.id)">{{patient.weight}} Kg</td>
+                <td scope="row" ng-click="goToPatient(patient.id)">{{patient.height}} M</td>
+                <td scope="row" ng-click="goToPatient(patient.id)">{{patient.age}} </td>
                 <td>
                   <div class="dropdown">
                     <button class="btn btn-secondary" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                       <i class="fa fa-angle-down" aria-hidden="true"></i>
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                      <li><button class="dropdown-item" ng-click="goToPatient(patient.id)" >Acessar paciente</button></li>
                       <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#patientEditionModal" ng-click="getPatient(patient)">Editar</button></li>
                       <li><button class="dropdown-item" ng-click="removePatient(patient.id)">Deletar</button></li>
                     </ul>
@@ -94,10 +93,10 @@
                 <div class="modal-body" >
                   <form  name="patientForm">
                     <br>
-                    nome:<input type="text" ng-required="true" class="form-control" ng-model="patientCreated.name" ng-maxlength="80">
-                    peso:<input type="text" ng-required="true" class="form-control" ng-model="patientCreated.weight" ui-weight>
-                    altura:<input type="text" ng-required="true" class="form-control" ng-model="patientCreated.height" ui-height >
-                    data de nascimento:<input type="date" ng-required="true" class="form-control" ng-model="patientCreated.borned_at" max="{{today}}">
+                    nome:<input type="text" ng-required="true" class="form-control" ng-model="createdPatient.name" ng-maxlength="80">
+                    peso:<input type="text" ng-required="true" class="form-control" ng-model="createdPatient.weight" ui-weight>
+                    altura:<input type="text" ng-required="true" class="form-control" ng-model="createdPatient.height" ui-height >
+                    data de nascimento:<input type="date" ng-required="true" class="form-control" ng-model="createdPatient.borned_at" max="{{today}}">
                     <div ng-show="patientForm.$invalid && patientForm.$dirty"  class="alert alert-danger">
                       Todos os campos sao obrigatorios
                     </div>

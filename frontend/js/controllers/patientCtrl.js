@@ -1,5 +1,7 @@
 angular.module("measurementsApp").controller('patientCtrl', function($scope, $http, patientService, measurementsService, $location, $routeParams){
     $scope.model = "patient";
+    $scope.today = new Date().toISOString().slice(0,10)
+    $scope.now = new Date().toISOString()
 
     function calculateAge(birthday) { // birthday is a date
         birthdayDate = new Date(birthday)
@@ -9,7 +11,7 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, $ht
     }
 
     const init = () => {
-        listMeasurements($routeParams.id)
+        listMeasurements()
         showPatient($routeParams.id)
     }
 
@@ -31,8 +33,8 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, $ht
         })
     }
 
-    const listMeasurements = patientId => {
-        measurementsService.index(patientId)
+    const listMeasurements = () => {
+        measurementsService.index($routeParams.id)
             .then((res) => {
                 $scope.measurementsData = res.data
             })
@@ -45,6 +47,32 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, $ht
             })
     };
 
+    const addMeasurement = () => {
+        measurementsService.store($scope.createdMeasurement, $routeParams.id)
+        .then(() => {
+            Swal.fire({
+                position: 'top-center',
+                icon: 'success',
+                title: 'Medicao adicionada com sucesso',
+                showConfirmButton: false,
+                timer: 1500
+              });
+            delete $scope.createdMeasurement;
+            $scope.measurementForm.$setPristine();
+            listMeasurements()
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: error,
+              });
+              console.log(error)
+
+            });
+    }
+
     init()
     $scope.listMeasurements = listMeasurements
+    $scope.addMeasurement = addMeasurement
 })
