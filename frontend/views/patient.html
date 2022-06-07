@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="card" style="width: 18rem;" id="profile-card">
+    <div class="card"  id="profile-card">
         
         <div class="card-body">
           <h5 class="card-title">{{patientData.name}} </h5>
@@ -36,9 +36,9 @@
           </div>
         </div>
       </div>
-      <div class="card" style="width: 45rem;" id="patients-card">
+      <div class="card" id="patients-card">
         <div class="card-body">
-          <h5 class="card-title" style="float: left ;">Medições</h5>
+          <h5 class="card-title">Medições</h5>
           <div class="input-group mb-3">
             <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Hoje</button>
             <ul class="dropdown-menu">
@@ -46,35 +46,39 @@
             </ul>
             <input type="text" class="form-control" aria-label="Text input with dropdown button" ng-model="patientSearch">
           </div>
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th scope="col">Horário</th>
-                <th scope="col">Glicemia</th>
-                <th scope="col">Carboidratos consumidos</th>
-                <th scope="col">Insulina aplicada</th>
-                <th scope="col"> </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="measurement in measurementsData">
-                <th scope="row">{{measurement.measurement_date.slice(11,16)}}</th>
-                <td>{{measurement.glucose}}</td>
-                <td>{{measurement.carbs}}</td>
-                <td>{{measurement.insulin}}</td>
-                <td><div class="dropdown">
-                  <button class="btn btn-secondary" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fa fa-angle-down" aria-hidden="true"></i>
-                  </button>
-                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item"ng-click="getMeasurement(measurement)" data-bs-toggle="modal" data-bs-target="#measurementEditionModal">edit</a></li>
-                    <li><a class="dropdown-item" ng-click="removeMeasurement(measurement.id)">delete</a></li>
-                  </ul>
-                </div>
-              </td>
-            </tbody>
-          </table>
-          <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#measurementCreationModal">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Horário</th>
+                  <th scope="col">Glicemia</th>
+                  <th scope="col">Carboidratos consumidos</th>
+                  <th scope="col">Insulina aplicada</th>
+                  <th scope="col"> </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="measurement in measurementsData">
+                  <th scope="row">{{measurement.measurement_date.slice(11,16)}}</th>
+                  <td>{{measurement.glucose}}</td>
+                  <td>{{measurement.carbs}}</td>
+                  <td>{{measurement.insulin}}</td>
+                  <td>
+                    <div class="dropdown">
+                      <a type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-list" aria-hidden="true"></i>
+                      </a>
+                      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item"ng-click="getMeasurement(measurement)" data-bs-toggle="modal" data-bs-target="#measurementEditionModal">Editar <i class="fa fa-pencil" aria-hidden="true"></i></a></li>
+                        <li><a class="dropdown-item" ng-click="removeMeasurement(measurement.id)"></i>Deletar <i class="fa fa-exclamation-triangle" aria-hidden="true"></i></a></li>
+                      </ul>
+                    </div>
+                  </td>
+                </tr>  
+              </tbody>
+            </table>
+          </div>
+            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#measurementCreationModal">
             Criar medição
           </button>
           <!-- Modal -->

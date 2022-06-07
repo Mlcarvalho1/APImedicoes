@@ -1,10 +1,10 @@
-<div class="container" ng-controller="userCtrl">
-    <div class="card" style="width: 18rem;  margin-right: auto;" id="profile-card">
+<div class="container" ng-controller="userCtrl" ">
+      <div class="card "  id="profile-card" >
         <img class="card-img-top" src="../uploads/profilepic.jpg" alt="Card image cap" id="profile-card-image">
         <div class="card-body">
           <h5 class="card-title">{{userData.name}}</h5>
           <p class="card-text";">{{userData.email}}</p>
-          <button style="float: right ;" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#userEditModal" ng-click="getUser(userData)">
+          <button  type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#userEditModal" ng-click="getUser(userData)">
             Editar
           </button>
           <div class="modal fade" id="userEditModal" tabindex="-1" aria-labelledby="userEditModalLabel" aria-hidden="true">
@@ -33,10 +33,10 @@
           </div>
         </div>
       </div>
-      <div class="card" style="width: 45rem; max-width: 100%;" id="patients-card">
+      <div class="card" id="patients-card">
         <div class="card-body">
-          <h5 class="card-title" style="float: left ;">Patients</h5>
-          <button style="float: right; margin-bottom: 8px;" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#patientCreationModal">
+          <h5 class="card-title" >Pacientes</h5>
+          <button style = " float: right; margin-bottom: 8px;" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#patientCreationModal">
             Criar paciente
           </button>
           <div class="input-group mb-3">
@@ -53,7 +53,7 @@
           <table class="table table-hover">
             <thead>
               <tr>
-                <th scope="col">id</th>
+                <!-- <th scope="col">id</th> -->
                 <th scope="col">Nome</th>
                 <th scope="col">Peso</th>
                 <th scope="col">Altura</th>
@@ -63,19 +63,19 @@
             </thead>
             <tbody>
               <tr ng-repeat="patient in patientsData | filter:patientSearch| orderBy: order">
-                <th scope="row" ng-click="goToPatient(patient.id)">{{patient.id}}</th>
-                <td scope="row" ng-click="goToPatient(patient.id)">{{patient.name}}</td>
-                <td scope="row" ng-click="goToPatient(patient.id)">{{patient.weight}} Kg</td>
-                <td scope="row" ng-click="goToPatient(patient.id)">{{patient.height}} M</td>
-                <td scope="row" ng-click="goToPatient(patient.id)">{{patient.age}} </td>
+                <!-- <th scope="row" ng-click="goToPatient(patient.id)">{{patient.id}}</th> -->
+                <td scope="row" ng-click="goToPatient(patient.id)" class=" text-truncate" style="max-width: 22vw;" >{{patient.name}}</td>
+                <td scope="row" ng-click="goToPatient(patient.id)" style="max-width: 16vw;">{{patient.weight}} Kg</td>
+                <td scope="row" ng-click="goToPatient(patient.id)" style="max-width: 16vw;">{{patient.height}} M</td>
+                <td scope="row" ng-click="goToPatient(patient.id)" style="max-width: 16vw;">{{patient.age}} </td>
                 <td>
                   <div class="dropdown">
-                    <button class="btn btn-secondary" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                      <i class="fa fa-angle-down" aria-hidden="true"></i>
-                    </button>
+                    <a id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fa fa-list" aria-hidden="true"></i>
+                    </a>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                      <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#patientEditionModal" ng-click="getPatient(patient)">Editar</button></li>
-                      <li><button class="dropdown-item" ng-click="removePatient(patient.id)">Deletar</button></li>
+                      <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#patientEditionModal" ng-click="getPatient(patient)">Editar  <i class="fa fa-pencil" aria-hidden="true"></i></button></li>
+                      <li><button class="dropdown-item" ng-click="removePatient(patient.id)">Deletar  <i class="fa fa-exclamation-triangle" aria-hidden="true"></i></button></li>
                     </ul>
                   </div>
                 </td>
