@@ -1,0 +1,142 @@
+<div class="container" ng-controller="userCtrl">
+    <div class="card" style="width: 18rem;  margin-right: auto;" id="profile-card">
+        <img class="card-img-top" src="../uploads/profilepic.jpg" alt="Card image cap" id="profile-card-image">
+        <div class="card-body">
+          <h5 class="card-title">{{userData.name}}</h5>
+          <p class="card-text";">{{userData.email}}</p>
+          <button style="float: right ;" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#userEditModal" ng-click="getUser(userData)">
+            Editar
+          </button>
+          <div class="modal fade" id="userEditModal" tabindex="-1" aria-labelledby="userEditModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="userEditModalLabel">Editar usuario</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form  name="userEditForm">
+                    <br>
+                    novo nome:<input type="text" class="form-control" ng-model="userEdit.name" ng-maxlength="80" ng-required="true">
+                    novo email:<input type="email" class="form-control" ng-model="userEdit.email" ng-maxlength="80" ng-required="true">
+                    <div ng-show="userEditForm.$invalid && userEditForm.$dirty" class="alert alert-danger">
+                      Os campos devem ter no maximo 80 caracteres
+                    </div>
+                </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" ng-disabled="userEditForm.$invalid" ng-click="editUser()">Salvar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="width: 45rem; max-width: 100%;" id="patients-card">
+        <div class="card-body">
+          <h5 class="card-title" style="float: left ;">Patients</h5>
+          <button style="float: right; margin-bottom: 8px;" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#patientCreationModal">
+            Criar paciente
+          </button>
+          <div class="input-group mb-3">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Ordenar por</button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" ng-click="orderBy('id')">id</a></li>
+              <li><a class="dropdown-item" ng-click="orderBy('name')">Nome</a></li>
+              <li><a class="dropdown-item" ng-click="orderBy('weight')">Peso</a></li>
+              <li><a class="dropdown-item" ng-click="orderBy('height')" >Altura</a></li>
+              <li><a class="dropdown-item" ng-click="orderBy('age')">Idade</a></li>
+            </ul>
+            <input type="text" class="form-control" aria-label="Text input with dropdown button" ng-model="patientSearch">
+          </div>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">id</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Peso</th>
+                <th scope="col">Altura</th>
+                <th scope="col">Idade</th>
+                <th scope="col"> </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="patient in patientsData | filter:patientSearch| orderBy: order">
+                <th scope="row" ng-click="goToPatient(patient.id)">{{patient.id}}</th>
+                <td scope="row" ng-click="goToPatient(patient.id)">{{patient.name}}</td>
+                <td scope="row" ng-click="goToPatient(patient.id)">{{patient.weight}} Kg</td>
+                <td scope="row" ng-click="goToPatient(patient.id)">{{patient.height}} M</td>
+                <td scope="row" ng-click="goToPatient(patient.id)">{{patient.age}} </td>
+                <td>
+                  <div class="dropdown">
+                    <button class="btn btn-secondary" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fa fa-angle-down" aria-hidden="true"></i>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                      <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#patientEditionModal" ng-click="getPatient(patient)">Editar</button></li>
+                      <li><button class="dropdown-item" ng-click="removePatient(patient.id)">Deletar</button></li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- Modal -->
+          <div class="modal fade" id="patientCreationModal" tabindex="-1" aria-labelledby="patientCreationModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="patientCreationModalLabel">Novo paciente</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" >
+                  <form  name="patientForm">
+                    <br>
+                    nome:<input type="text" ng-required="true" class="form-control" ng-model="createdPatient.name" ng-maxlength="80">
+                    peso:<input type="text" ng-required="true" class="form-control" ng-model="createdPatient.weight" ui-weight>
+                    altura:<input type="text" ng-required="true" class="form-control" ng-model="createdPatient.height" ui-height >
+                    data de nascimento:<input type="date" ng-required="true" class="form-control" ng-model="createdPatient.borned_at" max="{{today}}">
+                    <div ng-show="patientForm.$invalid && patientForm.$dirty"  class="alert alert-danger">
+                      Todos os campos sao obrigatorios
+                    </div>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" ng-disabled="patientForm.$invalid" ng-click="addPatient()">Salvar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- edit Modal -->
+        <div class="modal fade" id="patientEditionModal" tabindex="-1" aria-labelledby="patientCreationModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="patientEditionModalLabel">Editar Paciente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body" >
+                <form  name="patientEditionForm">
+                  <br>
+                  nome:<input type="text" class="form-control" ng-model="patientEdit.name" ng-maxlength="80">
+                  <div ng-show="patientEditionForm.$invalid && patientEditionForm.$dirty"  class="alert alert-danger">
+                    O nome deve ter no maximo 80 caracteres
+                  </div>
+                  peso:<input type="text" class="form-control" ng-model="patientEdit.weight" ui-weight ng-maxlength="3">
+                  altura:<input type="text" class="form-control" ng-model="patientEdit.height" ui-height ng-maxlength="4">
+                  data de nascimento:<input type="date" class="form-control" ng-model="patientEdit.borned_at" max="{{today}}" ng-required="false">
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" ng-disabled="patientEditionForm.$invalid" ng-click="editPatient()">Salvar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>

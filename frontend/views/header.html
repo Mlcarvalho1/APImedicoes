@@ -1,0 +1,23 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-black" ng-controller="authCtrl">
+    <a class="navbar-brand" href="#">
+        <img src="../uploads/AMIGOblack.png" width="60" height="60" class="d-inline-block align-top" alt="">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-item nav-link active" href="#">Início</a>
+        <a class="nav-item nav-link" href="http://127.0.0.1:5500/index.html#!users">Meu perfil</a>
+        <!-- <a class="nav-item nav-link" href="http://127.0.0.1:5500/index.html#!patient">Pacientes</a> -->
+      </div>
+    </div>
+    <div class="dropdown">
+      <button class="btn btn-secondary" type="button" id="header-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fa fa-angle-down" aria-hidden="true"></i>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end" style="margin-right: 20px ;">
+        <li><a class="dropdown-item" ng-click="logout()" ng-if="userLogged">Logout</a></li>
+      </ul>
+    </div>
+  </nav>

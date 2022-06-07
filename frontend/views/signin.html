@@ -1,0 +1,18 @@
+<h1>cadastro</h1>
+
+<div class="container" ng-controller="signinCtrl" ng-model="user" id="signin-form">
+    <form  name="userForm">
+        <br>
+        nome:<input type="text" ng-required="true" class="form-control" ng-model="user.name" ng-maxlenght="80">
+        email:<input type="email" ng-required="true" class="form-control" ng-model="user.email" ng-maxlenght="80">
+        <div ng-show="!user.email && userForm.$error.email[0].$dirty"  class="alert alert-danger">
+            por favor, preencha o email corretamente!
+        </div>
+        senha:<input type="password" ng-required="true" class="form-control" ng-model="user.password" ng-maxlenght="50">
+        confirmar senha:<input type="password" ng-required="true" class="form-control" ng-model="user.password_confirmation" ng-maxlenght="50">
+    </form>
+    <div ng-show="userForm.$invalid && userForm.$dirty" class="alert alert-danger">
+        por favor, preencha o formulario completo!
+    </div>
+    <button type="button" class="btn btn-primary" id="submit" ng-disabled="userForm.$invalid" ng-click="addUser()">Enviar</button> <br>
+</div>

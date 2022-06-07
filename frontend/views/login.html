@@ -1,0 +1,19 @@
+<h1>Login</h1>
+
+
+<div class="container" ng-controller="authCtrl" ng-model="measurementsApp" id="signin-form">
+    <form  name="loginForm">
+        <br>
+        email:<input type="email" ng-required="true" class="form-control" ng-model="user.email" >
+        <div ng-show="loginForm.$error.email[0].$dirty && loginForm.$error.email[0].$invalid"  class="alert alert-danger">
+            por favor, preencha o email corretamente!
+        </div>
+        senha:<input type="password" ng-required="true" class="form-control" ng-model="user.password">
+        <div ng-show="loginForm.$invalid && loginForm.$dirty" class="alert alert-danger">
+            por favor, preencha o formulario completo!
+        </div>
+        <button type="button" class="btn btn-primary" id="submit" ng-disabled="loginForm.$invalid" ng-click="login()">Enviar</button>
+    </form>
+</div>
+
+<a href="http://127.0.0.1:5500/index.html#!/signin"><button style="margin-left: auto; margin-right: auto;" type="button" class="btn" id="submit" >Ainda nao possui cadastro?</button></a>
