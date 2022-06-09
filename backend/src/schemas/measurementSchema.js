@@ -14,9 +14,9 @@ const schema = {
   },
   update: {
     body: Yup.object().shape({
-      insulin: Yup.number(),
-      carbs: Yup.number(),
-      glucose: Yup.number(),
+      insulin: Yup.number().nullable(),
+      carbs: Yup.number().nullable(),
+      glucose: Yup.number().nullable(),
       measurement_date: Yup.date(),
     }),
     params: Yup.object().shape({

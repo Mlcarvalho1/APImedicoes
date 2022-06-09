@@ -20,6 +20,10 @@ export default class Measurement extends Model {
         type: Sequelize.DATE,
         allowNull: false,
       },
+      measurement_day: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
     }, {
       sequelize,
       paranoid: true,

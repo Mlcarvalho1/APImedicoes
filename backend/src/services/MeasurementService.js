@@ -2,18 +2,21 @@ import Measurement from '../models/Measurement';
 import Patient from '../models/Patient';
 
 export default {
-  store: async (data, patient_id, user_id) => Measurement.create(data, {
-    where: {
-      patient_id,
-    },
-    include: {
-      model: Patient,
+  store: async (data, patient_id, user_id) => {
+    data.measurement_day = data.measurement_date.toISOString().slice(0, 10);
+    Measurement.create(data, {
       where: {
-        user_id,
+        patient_id,
       },
-      attributes: [],
-    },
-  }),
+      include: {
+        model: Patient,
+        where: {
+          user_id,
+        },
+        attributes: [],
+      },
+    });
+  },
 
   show: async (id, patient_id, user_id) => {
     const measurement = await Measurement.findOne({
@@ -40,6 +43,7 @@ export default {
 
   index: async (patient_id, user_id) => {
     const measurements = await Measurement.findAll({
+      order: [['measurement_date', 'ASC']],
       where: {
         patient_id,
       },
@@ -56,6 +60,8 @@ export default {
     if (!measurements.length) {
       throw new Error('nenhuma medicao cadastrada neste paciente');
     }
+
+    measurements.map((measurement) => measurement.measurement_date.setHours(measurement.measurement_date.getHours() - 3));
 
     return measurements;
   },

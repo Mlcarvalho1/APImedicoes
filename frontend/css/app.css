@@ -15,9 +15,18 @@ a {
     color: black;
     text-decoration: none;
 }
+
 .card{
     margin-left: auto;
     margin-right: auto;
+}
+
+.container.chart{
+    background-color: white;
+    margin-bottom: 20px;
+    margin-left: auto;
+    padding: 20px 10px 0px 0px;
+    border-radius: 5px;
 }
 
 #home-page.jumbotron{

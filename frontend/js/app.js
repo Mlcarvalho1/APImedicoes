@@ -1,1 +1,1 @@
-angular.module("measurementsApp", ["ngRoute", 'ui.bootstrap', 'ui.router']);
+angular.module("measurementsApp", ["ngRoute", 'ui.bootstrap', 'ui.router', 'chart.js']);

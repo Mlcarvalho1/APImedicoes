@@ -1,4 +1,5 @@
 import Patient from '../models/Patient';
+import Measurement from '../models/Measurement';
 import ProfilePics from '../models/ProfilePics';
 
 export default {
@@ -30,14 +31,24 @@ export default {
       },
       attributes: ['id', 'name', 'borned_at', 'weight', 'height'],
       order: [['id', 'DESC'], [ProfilePics, 'id', 'DESC']],
-      include: {
+      include: [{
         model: ProfilePics,
         attributes: ['filename'],
       },
+      {
+        model: Measurement,
+        attributes: ['glucose'],
+      }],
     });
     if (!patient) {
       throw new Error('Paciente nao existe');
     }
+
+    // const plusMedia = pessoas.map((obj, index) => {
+    //   const newObj = { ...obj }; newObj.id = (index + 1000); return newObj;
+    // });
+
+    console.log(patient.measurements);
 
     return patient;
   },

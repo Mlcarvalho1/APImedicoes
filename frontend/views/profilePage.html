@@ -1,5 +1,5 @@
-<div class="container" ng-controller="userCtrl" ">
-      <div class="card "  id="profile-card" >
+<div class="container" ng-controller="userCtrl" style="padding-top: 20px;">
+      <div class="card"  id="profile-card" >
         <img class="card-img-top" src="../uploads/profilepic.jpg" alt="Card image cap" id="profile-card-image">
         <div class="card-body">
           <h5 class="card-title">{{userData.name}}</h5>
@@ -12,7 +12,6 @@
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title" id="userEditModalLabel">Editar usuario</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                   <form  name="userEditForm">
@@ -35,8 +34,8 @@
       </div>
       <div class="card" id="patients-card">
         <div class="card-body">
-          <h5 class="card-title" >Pacientes</h5>
-          <button style = " float: right; margin-bottom: 8px;" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#patientCreationModal">
+          <h5 class="card-title float-left">Pacientes</h5>
+          <button style = "margin-bottom: 8px;" type="button" class="btn btn-secondary float-right" data-bs-toggle="modal" data-bs-target="#patientCreationModal">
             Criar paciente
           </button>
           <div class="input-group mb-3">
@@ -50,7 +49,7 @@
             </ul>
             <input type="text" class="form-control" aria-label="Text input with dropdown button" ng-model="patientSearch">
           </div>
-          <table class="table table-hover">
+          <table class="table table-hover table-responsive-sm">
             <thead>
               <tr>
                 <!-- <th scope="col">id</th> -->
@@ -64,10 +63,10 @@
             <tbody>
               <tr ng-repeat="patient in patientsData | filter:patientSearch| orderBy: order">
                 <!-- <th scope="row" ng-click="goToPatient(patient.id)">{{patient.id}}</th> -->
-                <td scope="row" ng-click="goToPatient(patient.id)" class=" text-truncate" style="max-width: 22vw;" >{{patient.name}}</td>
-                <td scope="row" ng-click="goToPatient(patient.id)" style="max-width: 16vw;">{{patient.weight}} Kg</td>
-                <td scope="row" ng-click="goToPatient(patient.id)" style="max-width: 16vw;">{{patient.height}} M</td>
-                <td scope="row" ng-click="goToPatient(patient.id)" style="max-width: 16vw;">{{patient.age}} </td>
+                <td scope="row" ng-click="goToPatient(patient.id)" class=" text-truncate" style="max-width: 28vw ;" >{{patient.name}}</td>
+                <td scope="row" ng-click="goToPatient(patient.id)">{{patient.weight}} Kg</td>
+                <td scope="row" ng-click="goToPatient(patient.id)">{{patient.height}} M</td>
+                <td scope="row" ng-click="goToPatient(patient.id)">{{patient.age}} </td>
                 <td>
                   <div class="dropdown">
                     <a id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -88,7 +87,6 @@
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title" id="patientCreationModalLabel">Novo paciente</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" >
                   <form  name="patientForm">
