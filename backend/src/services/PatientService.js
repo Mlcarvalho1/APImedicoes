@@ -1,3 +1,4 @@
+import { literal } from 'sequelize';
 import Patient from '../models/Patient';
 import Measurement from '../models/Measurement';
 import ProfilePics from '../models/ProfilePics';
@@ -29,7 +30,10 @@ export default {
         id,
         user_id: userId,
       },
-      attributes: ['id', 'name', 'borned_at', 'weight', 'height'],
+      attributes: [
+        'id', 'name', 'borned_at', 'weight', 'height',
+        [literal('round(AVG("measurements"."glucose"))'), 'glycemic_average'],
+      ],
       order: [['id', 'DESC'], [ProfilePics, 'id', 'DESC']],
       include: [{
         model: ProfilePics,
@@ -37,20 +41,24 @@ export default {
       },
       {
         model: Measurement,
-        attributes: ['glucose'],
+        attributes: [],
       }],
+      group: [
+        '"patient".id', '"profile_pics".id',
+      ],
     });
     if (!patient) {
       throw new Error('Paciente nao existe');
     }
 
-    // const plusMedia = pessoas.map((obj, index) => {
-    //   const newObj = { ...obj }; newObj.id = (index + 1000); return newObj;
-    // });
+    const parsedPatient = patient.toJSON();
 
-    console.log(patient.measurements);
+    const glycatedHemoglobinValue = ((parsedPatient.glycemic_average + 46.7) / 28.7).toFixed(2);
 
-    return patient;
+    return {
+      ...parsedPatient,
+      glycated_hemoglobin: glycatedHemoglobinValue,
+    };
   },
   index: async (user_id) => {
     const patients = Patient.findAll({

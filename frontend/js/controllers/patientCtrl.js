@@ -1,13 +1,13 @@
 angular.module("measurementsApp").controller('patientCtrl', function($scope, $http, patientService, measurementsService, $location, $routeParams, $timeout){
     
-    $scope.model = "patient";
-    moment().locale('pt-br')
-    $scope.today = moment().format('YYYY-MM-DD');
-    $scope.now = moment().format('yyyy-MM-DDTHH:mm')
+    $scope.model = "patient"
+    $scope.selectedDate = new Date()
+    $scope.today = new Date()
     $scope.createdMeasurement = {};
-    $scope.createdMeasurement.measurement_date = new Date()
+    $scope.createdMeasurement.measurement_date = new Date(moment().format('yyyy-MM-DDTHH:mm'))
 
     $scope.time = moment().format('LT')
+
 
     function calculateAge(birthday) { // birthday is a date
         birthdayDate = new Date(birthday)
@@ -92,11 +92,12 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, $ht
                 showConfirmButton: false,
                 timer: 1500
               
-            });
+            }).then(() => {
+                init()
+                })
             $scope.createdMeasurement = {};
-            $scope.createdMeasurement.measurement_date = new Date()
+            $scope.createdMeasurement.measurement_date = new Date(moment().format('yyyy-MM-DDTHH:mm'))
             $scope.measurementCreationForm.$setPristine();
-            $timeout(() => listMeasurements());
         })
 
         .catch(error => {
@@ -124,8 +125,9 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, $ht
                 title: 'Paciente editado com sucesso',
                 showConfirmButton: false,
                 timer: 1500
-            })
-            listMeasurements()
+            }).then(() => {
+                init()
+                })
         })
         .catch(error => {
             Swal.fire({
@@ -163,7 +165,7 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, $ht
                         'Sua medição foi deletada.',
                         'success'
                         )
-                    listMeasurements()
+                    init()
                 })
                 .catch(error)
                 Swal.fire({
@@ -186,9 +188,11 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, $ht
         
     }
 
-    const renderCharts = (measurementsValues, selectedDay) => {
-        Highcharts.chart('container', {
+    const renderCharts = (measurementsValues) => {
 
+        const today = angular.copy($scope.selectedDate)
+
+        Highcharts.chart('container', {
             chart: {
                 type: 'spline',
                 scrollablePlotArea: {
@@ -219,8 +223,8 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, $ht
                 rangeDescription: 'Range: 00:00 to 23:99'
               },
               type: 'datetime',
-              min: new Date('2022-06-08').getTime(),
-              max: new Date('2022-06-09').getTime()
+              min: today.setUTCHours(0,0,0,0),
+              max: new Date(moment(today).add(1, 'days')).getTime()
             },
 
             tooltip: {
@@ -277,12 +281,16 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, $ht
         showPatient($routeParams.id)
     }
 
+    const dateSelect = () => {
+        init()
+    }
                 
 
     init()
 
-    $scope.editMeasurement = editMeasurement
-    $scope.getMeasurement = getMeasurement
+    $scope.dateSelect = dateSelect;
+    $scope.editMeasurement = editMeasurement;
+    $scope.getMeasurement = getMeasurement;
     $scope.removeMeasurement = removeMeasurement;
     $scope.getPatient = getPatient;
     $scope.editPatient = editPatient;

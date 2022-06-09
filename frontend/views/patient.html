@@ -10,8 +10,8 @@
             <p class="card-text">idade: {{patientData.age}} Anos</p>
             <p class="card-text">peso: {{patientData.weight}} Kg</p>
             <p class="card-text">altura: {{patientData.height}} M</p>
-            <p class="card-text">media glicemica: </p>
-            <p class="card-text">hemoglobina glicada estimada:</p>
+            <p class="card-text">media glicemica: {{patientData.glycemic_average}} mg/dl</p>
+            <p class="card-text">hemoglobina glicada estimada: {{patientData.glycated_hemoglobin}}%</p>
             <div class="modal fade" id="patientEditionModal" tabindex="-1" aria-labelledby="patientEditionModalLabel" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
@@ -24,12 +24,12 @@
                       nome:<input type="text" ng-required="true" class="form-control" ng-model="editedPatient.name" ng-maxlength="80">
                       peso:<input type="text" ng-required="true" class="form-control" ng-model="editedPatient.weight" ui-weight>
                       altura:<input type="text" ng-required="true" class="form-control" ng-model="editedPatient.height" ui-height >
-                      data de nascimento:<input type="date" ng-required="true" class="form-control" ng-model="editedPatient.borned_at" max="{{today}}">
+                      data de nascimento:<input type="date" ng-required="true" class="form-control" ng-model="editedPatient.borned_at" ng-max='today' max="{{today | date:'yyyy-MM-dd'}}">
                     </form>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" ng-click="editPatient()">Salvar</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" ng-disabled="patientForm.$invalid" ng-click="editPatient()">Salvar</button>
                   </div>
                 </div>
               </div>
@@ -44,7 +44,7 @@
             Criar medição
           </button>
           <div class="input-group mb-3 mx-auto" style="max-width: 200px;">
-            <input type="date" style="max-width: 140px ;" class="form-control mx-auto" aria-label="" aria-describedby="basic-addon1" value="{{today}}" ng-model="selectedDate">
+            <input type="date" style="max-width: 140px ;" class="form-control mx-auto" aria-label="" aria-describedby="basic-addon1" ng-max='today' max="{{today | date:'yyyy-MM-dd'}}" ng-change="dateSelect()" ng-model="selectedDate" >
           </div>
             <table class="table table-hover table-responsive-sm">
               <thead>
@@ -88,7 +88,7 @@
                       Glicemia:<input type="text"  class="form-control" ng-model="createdMeasurement.glucose" ui-weight>
                       Carboidratos ingeridos:<input type="text" class="form-control" ng-model="createdMeasurement.carbs" ui-weight>
                       Insulina aplicada:<input type="text"  class="form-control" ng-model="createdMeasurement.insulin" ui-weight>
-                      Horario da medição:<input type="datetime-local"  ng-required="true"  class="form-control" value="{{now}}" ng-model="createdMeasurement.measurement_date" >
+                      Horario da medição:<input type="datetime-local"  ng-required="true"  class="form-control"  ng-model="createdMeasurement.measurement_date" >
                   </form>
                   </div>
                   <div class="modal-footer">
