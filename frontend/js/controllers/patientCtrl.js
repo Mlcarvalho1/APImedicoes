@@ -1,11 +1,14 @@
 angular.module("measurementsApp").controller('patientCtrl', function($scope, $http, patientService, measurementsService, $location, $routeParams, $timeout){
     
+    $scope.page = 1
     $scope.model = "patient"
-    $scope.selectedDate = new Date()
-    $scope.today = new Date()
+    $scope.startDay = new Date(moment())
+    $scope.endDay = new Date(moment().add(1, 'days'))
+    $scope.test = new Date( moment())
+    $scope.selectedDay = new Date(moment())
+    $scope.today = new Date(moment())
     $scope.createdMeasurement = {};
     $scope.createdMeasurement.measurement_date = new Date(moment().format('yyyy-MM-DDTHH:mm'))
-
     $scope.time = moment().format('LT')
 
 
@@ -64,22 +67,39 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, $ht
     }
 
     const listMeasurements = () => {
-       measurementsService.index($routeParams.id)
+       measurementsService.index($routeParams.id, {
+           day: moment($scope.selectedDay).format('YYYY-MM-DD'),
+           page: $scope.page,
+        })
             .then((res) => {
-                $scope.measurementsData = res.data
-                
-                const measurementsValues = res.data.map((measurement) => [ new Date(measurement.measurement_date).getTime() ,measurement.glucose])
-                renderCharts(measurementsValues)
+                $scope.measurementsData = res.data.map((measurement) => ({
+                    ...measurement,
+                      measurement_date: moment(measurement.measurement_date).format('LT')
+                    }));
         
             })
             .catch(error => {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Atenção',
-                    text: error.data.error,
-                  })
+                delete $scope.measurementsData
             })
     };
+
+    const listMeasurementsChart = () => {
+        measurementsService.indexChart($routeParams.id, {
+            startDay: moment($scope.startDay).format('YYYY-MM-DD'),
+            endDay: moment($scope.endDay).format('YYYY-MM-DD'),
+         })
+             .then((res) => {
+                 $scope.measurementsChart = res.data
+                const measurementsValues = res.data.map((measurement) => [ +moment(measurement.measurement_date).format('x') ,measurement.glucose])
+                console.log(measurementsValues); 
+                renderCharts(measurementsValues)
+         
+             })
+             .catch(error => {
+                 delete $scope.measurementsChart
+                 renderCharts()
+             })
+     };
 
     const addMeasurement = () => {
         measurementsService.store($scope.createdMeasurement, $routeParams.id)
@@ -108,13 +128,13 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, $ht
               });
 
             });
-    }
+    };
 
     const getMeasurement = measurement => {
         $scope.editedMeasurement = angular.copy(measurement)
         $scope.editedMeasurement.measurement_date = new Date($scope.editedMeasurement.measurement_date)
         $scope.editedMeasurement.measurement_date.setHours( $scope.editedMeasurement.measurement_date.getHours() + 3);
-    }
+    };
 
     const editMeasurement = () => {
         measurementsService.edit($scope.editedMeasurement, $routeParams.id, $scope.editedMeasurement.id)
@@ -137,7 +157,7 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, $ht
               });
         });
         delete $scope.editedMeasurement;
-    }
+    };
 
     const removeMeasurement = measurementId => {     
         const swalWithBootstrapButtons = Swal.mixin({
@@ -186,12 +206,30 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, $ht
             }
             })
         
-    }
+    };
+
+    const pageSelect = (page) => {
+        $scope.page = page;
+        listMeasurements();
+    };
+
+    const previousPage = () => {$scope.page !== 1
+            
+        if($scope.page !== 1){
+            $scope.page -= 1;
+            listMeasurements();
+        }
+    };
+
+    const nextPage = () =>{
+
+        if($scope.page !== $scope.maxPages){
+            $scope.page += 1;
+            listMeasurements();
+        };
+    };
 
     const renderCharts = (measurementsValues) => {
-
-        const today = angular.copy($scope.selectedDate)
-
         Highcharts.chart('container', {
             chart: {
                 type: 'spline',
@@ -201,8 +239,12 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, $ht
                 }
             },
 
+            time: {
+                timezone: 'America/Recife'
+            },
+
             title: {
-              text: 'Medicoes do dia'
+              text: `Medicoes do dia`
             },
           
             yAxis: {
@@ -223,8 +265,8 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, $ht
                 rangeDescription: 'Range: 00:00 to 23:99'
               },
               type: 'datetime',
-              min: today.setUTCHours(0,0,0,0),
-              max: new Date(moment(today).add(1, 'days')).getTime()
+              min: +moment($scope.startDay).startOf('day').format('x'),
+              max: +moment($scope.endDay).startOf('day').format('x'),
             },
 
             tooltip: {
@@ -253,7 +295,7 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, $ht
             },
           
             series: [{
-              name: 'medicoes',
+              name: 'medicao',
               data: measurementsValues,
               color: '#fc5757'
             }],
@@ -274,20 +316,25 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, $ht
             }
           
           });  
-    }
+    };
 
     const init = () => {
         listMeasurements()
+        listMeasurementsChart()
         showPatient($routeParams.id)
-    }
+    };
 
     const dateSelect = () => {
         init()
-    }
+    };
                 
 
     init()
 
+
+    $scope.nextPage = nextPage;
+    $scope.previousPage = previousPage;
+    $scope.pageSelect = pageSelect;
     $scope.dateSelect = dateSelect;
     $scope.editMeasurement = editMeasurement;
     $scope.getMeasurement = getMeasurement;

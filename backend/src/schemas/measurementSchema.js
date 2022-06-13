@@ -24,10 +24,22 @@ const schema = {
       patient_id: Yup.number().required(),
     }),
   },
-  show: {
+  index: {
     params: Yup.object().shape({
-      id: Yup.number().required(),
-      patient_id: Yup.number(),
+      patient_id: Yup.number().required(),
+    }),
+    query: Yup.object().shape({
+      day: Yup.string(),
+      page: Yup.number().default(1),
+    }),
+  },
+  listChart: {
+    params: Yup.object().shape({
+      patient_id: Yup.number().required(),
+    }),
+    query: Yup.object().shape({
+      startDay: Yup.string(),
+      endDay: Yup.string(),
     }),
   },
   delete: {

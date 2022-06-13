@@ -4,7 +4,29 @@ import BaseController from './BaseController';
 class MeasurementController {
   async index(req, res) {
     try {
-      const measurement = await MeasuramentService.index(req.filter.patient_id, req.userId);
+      const options = {
+        patient_id: req.filter.patient_id,
+        user_id: req.userId,
+        day: req.filter.day,
+        page: req.filter.page,
+      };
+      const measurement = await MeasuramentService.index(options);
+      return BaseController.handleResponse(res, measurement);
+    } catch (e) {
+      return BaseController.handleError(res, e);
+    }
+  }
+
+  async listChart(req, res) {
+    try {
+      const options = {
+        patient_id: req.filter.patient_id,
+        user_id: req.userId,
+        startDay: req.filter.startDay,
+        endDay: req.filter.endDay,
+      };
+
+      const measurement = await MeasuramentService.listChart(options);
       return BaseController.handleResponse(res, measurement);
     } catch (e) {
       return BaseController.handleError(res, e);

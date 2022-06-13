@@ -6,7 +6,7 @@
             <button style="float: right ;" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#patientEditionModal" ng-click="getPatient(patientData)">
               editar
             </button>
-            <h5 class="card-title">{{patientData.name}}</h5>
+            <h5 class="card-title">{{patientData.name}} {{maxPages}}</h5>
             <p class="card-text">idade: {{patientData.age}} Anos</p>
             <p class="card-text">peso: {{patientData.weight}} Kg</p>
             <p class="card-text">altura: {{patientData.height}} M</p>
@@ -43,9 +43,8 @@
           <button type="button" class="btn btn-secondary float-right" data-bs-toggle="modal" data-bs-target="#measurementCreationModal">
             Criar medição
           </button>
-          <div class="input-group mb-3 mx-auto" style="max-width: 200px;">
-            <input type="date" style="max-width: 140px ;" class="form-control mx-auto" aria-label="" aria-describedby="basic-addon1" ng-max='today' max="{{today | date:'yyyy-MM-dd'}}" ng-change="dateSelect()" ng-model="selectedDate" >
-          </div>
+          <input type="date" style="max-width: 140px ;" class="form-control mx-auto" aria-label="" aria-describedby="basic-addon1" ng-max='today' max="{{today | date:'yyyy-MM-dd'}}" ng-change="dateSelect()" ng-model="selectedDay" >
+          </form>
             <table class="table table-hover table-responsive-sm">
               <thead>
                 <tr>
@@ -57,7 +56,7 @@
               </thead>
               <tbody>
                 <tr ng-repeat="measurement in measurementsData | filter: selectedDate">
-                  <th scope="row">{{measurement.measurement_date.slice(11,16)}}</th>
+                  <th scope="row">{{measurement.measurement_date}}</th>
                   <td>{{measurement.glucose}}</td>
                   <td>{{measurement.carbs}}</td>
                   <td>{{measurement.insulin}} </td>
@@ -75,7 +74,26 @@
                 </tr>  
               </tbody>
             </table>
-          <!-- Modal -->
+            <nav aria-label="Page navigation example">
+              <ul class="pagination justify-content-center">
+                <li class="page-item">
+                  <a class="page-link" aria-label="Previous"  ng-click="previousPage()">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Previous</span>
+                  </a>
+                </li>
+                <li class="page-item"><a class="page-link" ng-click="pageSelect(1)">1</a></li>
+                <li class="page-item"><a class="page-link" ng-click="pageSelect(2)">2</a></li>
+                <li class="page-item"><a class="page-link" ng-click="pageSelect(3)">3</a></li>
+                <li class="page-item">
+                  <a class="page-link" aria-label="Next" ng-click="nextPage()">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only" >Next</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+            <!-- Modal -->
             <div class="modal fade" id="measurementCreationModal" tabindex="-1" aria-labelledby="measurementCreationModalLabel" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
@@ -125,6 +143,14 @@
       </div>
     </div>
     <div class="container chart mt-3" >
+      <form class="form-inline">
+        <div class="mx-auto">
+          <div class="">
+            <input type="date" style="max-width: 140px ;" class="form-control mx-auto" aria-label="" aria-describedby="basic-addon1" ng-max='today' max="{{today | date:'yyyy-MM-dd'}}" ng-change="dateSelect()" ng-model="startDay" >
+            <input type="date" style="max-width: 140px ;" class="form-control mx-auto" aria-label="" aria-describedby="basic-addon1" ng-change="dateSelect()" ng-model="endDay" >
+          </div>
+        </div>
+      </form>
       <figure class="highcharts-figure">
         Tipo de grafico:
         <a ng-click="showLineGraph()"><i class="fa fa-line-chart" aria-hidden="true"></i></a>

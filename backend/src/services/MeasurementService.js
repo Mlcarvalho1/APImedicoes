@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import Measurement from '../models/Measurement';
 import Patient from '../models/Patient';
 
@@ -41,29 +42,64 @@ export default {
     return measurement;
   },
 
-  index: async (patient_id, user_id) => {
-    const measurements = await Measurement.findAll({
+  index: async (options) => {
+    const whereCondition = {
+      patient_id: options.patient_id,
+      measurement_day: options.day,
+    };
+
+    return Measurement.findAll({
       order: [['measurement_date', 'ASC']],
-      where: {
-        patient_id,
-      },
+      where: whereCondition,
+      logging: console.log,
       include: {
         model: Patient,
         where: {
-          user_id,
+          user_id: options.user_id,
+        },
+        attributes: [],
+      },
+      limit: 6,
+      offset: options.page,
+      attributes: ['glucose', 'carbs', 'insulin', 'measurement_date', 'id'],
+    });
+  },
+  listChart: async (options) => {
+    const whereCondition = {
+      patient_id: options.patient_id,
+      measurement_day: {
+        [Op.between]: [options.startDay, options.endDay],
+      },
+    };
+
+    if (options.startDay && !options.endDay) {
+      whereCondition.measurement_day = {
+        [Op.gte]: options.startDay,
+      };
+    }
+
+    if (!options.startDay && options.endDay) {
+      whereCondition.measurement_day = {
+        [Op.lte]: options.endDay,
+      };
+    }
+
+    return Measurement.findAll({
+      order: [['measurement_date', 'ASC']],
+      where: whereCondition,
+      include: {
+        model: Patient,
+        where: {
+          user_id: options.user_id,
         },
         attributes: [],
       },
       attributes: ['glucose', 'carbs', 'insulin', 'measurement_date', 'id'],
     });
 
-    if (!measurements.length) {
-      throw new Error('nenhuma medicao cadastrada neste paciente');
-    }
-
-    measurements.map((measurement) => measurement.measurement_date.setHours(measurement.measurement_date.getHours() - 3));
-
-    return measurements;
+    // return measurements.map((measurement) => ({
+    //   measurement_date: measurement_date.setHours(measurement.measurement_date.getHours() - 3)
+    // }));
   },
 
   delete: async (id, patient_id, user_id) => {

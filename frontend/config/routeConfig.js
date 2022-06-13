@@ -1,6 +1,9 @@
 const myapp = angular.module("measurementsApp")
 
 myapp.config(function ($routeProvider) {
+    moment().locale('pt-br');
+    moment.tz('America/Recife');
+
     $routeProvider.otherwise("/homePage");
 
     $routeProvider.when("/homePage", {
