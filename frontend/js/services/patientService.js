@@ -1,5 +1,5 @@
 angular.module('measurementsApp').factory('patientService', function($http, config) {
-    const index = token => $http.get(`${config.baseUrl}/patients`)
+    const index = () => $http.get(`${config.baseUrl}/patients`)
 
     const create =patient => $http.post(`${config.baseUrl}/patients`,patient);
 

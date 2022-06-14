@@ -47,22 +47,44 @@ export default {
       patient_id: options.patient_id,
       measurement_day: options.day,
     };
-
-    return Measurement.findAll({
-      order: [['measurement_date', 'ASC']],
-      where: whereCondition,
-      logging: console.log,
-      include: {
-        model: Patient,
-        where: {
-          user_id: options.user_id,
+    const promises = [
+      Measurement.findAll({
+        order: [['measurement_date', 'ASC']],
+        where: whereCondition,
+        logging: console.log,
+        include: {
+          model: Patient,
+          where: {
+            user_id: options.user_id,
+          },
+          attributes: [],
         },
-        attributes: [],
-      },
-      limit: 6,
-      offset: options.page,
-      attributes: ['glucose', 'carbs', 'insulin', 'measurement_date', 'id'],
-    });
+        limit: 6,
+        offset: (options.page - 1) * 6,
+        attributes: ['glucose', 'carbs', 'insulin', 'measurement_date', 'id'],
+      }),
+    ];
+
+    if (options.page === 1) {
+      promises.push(
+        Measurement.scope({
+          method: ['ofLoggedUser', options.user_id],
+        }).count({
+          where: whereCondition,
+        }),
+      );
+    }
+
+    const [items, totalItems] = await Promise.all(promises);
+    const responseData = {
+      items,
+    };
+
+    if (options.page === 1) {
+      responseData.total_items = totalItems;
+    }
+
+    return responseData;
   },
   listChart: async (options) => {
     const whereCondition = {

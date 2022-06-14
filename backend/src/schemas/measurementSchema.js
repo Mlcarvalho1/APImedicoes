@@ -30,7 +30,7 @@ const schema = {
     }),
     query: Yup.object().shape({
       day: Yup.string(),
-      page: Yup.number().default(1),
+      page: Yup.number().default(0),
     }),
   },
   listChart: {

@@ -1,30 +1,32 @@
-angular.module("measurementsApp").controller('patientCtrl', function($scope, $http, patientService, measurementsService, $location, $routeParams, $timeout){
+angular.module("measurementsApp").controller('patientCtrl', function($scope, patientService, measurementsService, $routeParams, $q){
     
-    $scope.page = 1
-    $scope.model = "patient"
-    $scope.startDay = new Date(moment())
-    $scope.endDay = new Date(moment().add(1, 'days'))
-    $scope.test = new Date( moment())
-    $scope.selectedDay = new Date(moment())
-    $scope.today = new Date(moment())
+    $scope.currentPage = 1;
+    $scope.model = "patient";
+    $scope.startDay = new Date(moment());
+    $scope.endDay = new Date(moment().add(1, 'days'));
+    $scope.test = new Date( moment());
+    $scope.selectedDay = new Date(moment());
+    $scope.today = new Date(moment());
     $scope.createdMeasurement = {};
-    $scope.createdMeasurement.measurement_date = new Date(moment().format('yyyy-MM-DDTHH:mm'))
-    $scope.time = moment().format('LT')
+    $scope.createdMeasurement.measurement_date = new Date(moment().format('yyyy-MM-DDTHH:mm'));
+    $scope.time = moment().format('LT');
+    $scope.lineGraph = true;
+    $scope.columnGraph = false;
 
 
     function calculateAge(birthday) { // birthday is a date
-        birthdayDate = new Date(birthday)
+        birthdayDate = new Date(birthday);
         const ageDifMs = Date.now() - birthdayDate.getTime();
         const ageDate = new Date(ageDifMs); // miliseconds from epoch
         return Math.abs(ageDate.getUTCFullYear() - 1970);
-    }
+    };
 
     const showPatient = patientId => {
-        patientService.show(patientId)
+        return patientService.show(patientId)
         .then((resp) => {
-            const patient = resp.data
+            const patient = resp.data;
                 const remodledPatient = {...patient};
-                remodledPatient.age = calculateAge(patient.borned_at)
+                remodledPatient.age = calculateAge(patient.borned_at);
             
             $scope.patientData = remodledPatient;
         })
@@ -33,15 +35,15 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, $ht
                 icon: 'warning',
                 title: 'Atenção',
                 text: error.data,
-              })
-        })
-    }
+              });
+        });
+    };
 
     const getPatient = patient => {
         $scope.editedPatient = angular.copy(patient)
         $scope.editedPatient.borned_at = new Date($scope.editedPatient.borned_at)
 
-    }
+    };
 
     const editPatient = () => {
         patientService.edit($scope.editedPatient)
@@ -67,31 +69,44 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, $ht
     }
 
     const listMeasurements = () => {
-       measurementsService.index($routeParams.id, {
+        if ($scope.loadingMeasurements) {
+            return;
+        }
+
+        $scope.loadingMeasurements = true;
+
+       return measurementsService.index($routeParams.id, {
            day: moment($scope.selectedDay).format('YYYY-MM-DD'),
-           page: $scope.page,
+           page: $scope.currentPage,
         })
             .then((res) => {
-                $scope.measurementsData = res.data.map((measurement) => ({
+                if (res.data.total_items) {
+                    $scope.totalItems = res.data.total_items
+                }
+
+                $scope.measurementsData = res.data.items.map((measurement) => ({
                     ...measurement,
                       measurement_date: moment(measurement.measurement_date).format('LT')
                     }));
-        
+            
             })
             .catch(error => {
                 delete $scope.measurementsData
+            }).finally(() => {
+                $scope.loadingMeasurements = false
+                $scope.loadingDateSelection = false
             })
     };
 
     const listMeasurementsChart = () => {
-        measurementsService.indexChart($routeParams.id, {
+        return measurementsService.indexChart($routeParams.id, {
             startDay: moment($scope.startDay).format('YYYY-MM-DD'),
             endDay: moment($scope.endDay).format('YYYY-MM-DD'),
          })
              .then((res) => {
                  $scope.measurementsChart = res.data
                 const measurementsValues = res.data.map((measurement) => [ +moment(measurement.measurement_date).format('x') ,measurement.glucose])
-                console.log(measurementsValues); 
+                console.log(measurementsValues);
                 renderCharts(measurementsValues)
          
              })
@@ -208,29 +223,51 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, $ht
         
     };
 
-    const pageSelect = (page) => {
-        $scope.page = page;
+    const onPaginate = (currentPage) => {
+        $scope.currentPage = currentPage
         listMeasurements();
     };
 
-    const previousPage = () => {$scope.page !== 1
-            
-        if($scope.page !== 1){
-            $scope.page -= 1;
-            listMeasurements();
+    const getArrayAvg = (array) => Math.round(array.reduce((acc, value) => acc + value, 0)/array.length);
+    
+
+    const getMeasurementGroup = date => {
+        const hour = moment(date).format('HH');
+
+        if (hour >= 0 && hour <= 3) {
+            return '00-03hr';
         }
-    };
+        
+        if (hour > 3 && hour <= 6) {
+            return '03-06hr';
+        }
+        
+        if (hour > 6 && hour <= 9) {
+            return '06-09hr';
+        }
+        
+        if (hour > 9 && hour <= 12) {
+            return '09-12hr';
+        }
+        
+        if (hour > 12 && hour <= 15) {
+            return '12-15hr';
+        }
 
-    const nextPage = () =>{
+        if (hour > 15 && hour <= 18) {
+            return '15-18hr';
+        }
 
-        if($scope.page !== $scope.maxPages){
-            $scope.page += 1;
-            listMeasurements();
-        };
-    };
+        if (hour > 18 && hour <= 21) {
+            return '18-21hr';
+        }
+
+        return '21-24hr';
+    }
 
     const renderCharts = (measurementsValues) => {
-        Highcharts.chart('container', {
+
+        Highcharts.chart('line', {
             chart: {
                 type: 'spline',
                 scrollablePlotArea: {
@@ -252,15 +289,15 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, $ht
                 text: 'mg/dl'
               },
               min: 0,
-              max: 300,
               plotBands: [{
-                color: '#7bd7b0', // Color value
+                color: '#10B364', // Color value
                 from: 70, // Start of the plot band
                 to: 180 // End of the plot band
               }],
             },
           
             xAxis: {
+                
               accessibility: {
                 rangeDescription: 'Range: 00:00 to 23:99'
               },
@@ -297,7 +334,7 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, $ht
             series: [{
               name: 'medicao',
               data: measurementsValues,
-              color: '#fc5757'
+              color: 'red'
             }],
           
             responsive: {
@@ -315,26 +352,135 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, $ht
               }]
             }
           
-          });  
+          });
+
+          const groupedMeasrumentByHour = measurementsValues.reduce((acc, measurement) => {
+            const measurementGroupHour = getMeasurementGroup(measurement[0]);
+
+            return {
+                ...acc,
+                [measurementGroupHour]: [
+                    ...acc[measurementGroupHour],
+                    measurement[1]
+                ]
+            }
+          }, {
+            '00-03hr': [],
+            '03-06hr': [],
+            '06-09hr': [],
+            '09-12hr': [],
+            '12-15hr': [],
+            '15-18hr': [],
+            '18-21hr': [],
+            '21-24hr': [],
+          });
+
+          console.log(JSON.stringify(groupedMeasrumentByHour, null, 4), 'OLA')
+
+          Highcharts.chart('column', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Media glicemica'
+            },
+            xAxis: {
+                
+                categories: Object.keys(groupedMeasrumentByHour),
+                crosshair: true,
+                plotLines: [
+                    {
+                        color: 'red',
+                        dashStyle: 'longdashdot',
+                        value: 180,
+                    }
+                ],
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Media glicemica: mg/dl'
+                },
+                plotLines: [{
+                    color: 'orange',
+                    value: 180, 
+                    width: 2 
+                  },
+                  {
+                    color: 'red',
+                    value: 70,
+                    width: 2
+                  }
+                ]
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            
+            series: [{
+                name: 'glicemia mg/dl',
+                data: [ getArrayAvg(groupedMeasrumentByHour['00-03hr']),
+                    getArrayAvg(groupedMeasrumentByHour['03-06hr']),
+                    getArrayAvg(groupedMeasrumentByHour['06-09hr']),
+                    getArrayAvg(groupedMeasrumentByHour['09-12hr']),
+                    getArrayAvg(groupedMeasrumentByHour['12-15hr']),
+                    getArrayAvg(groupedMeasrumentByHour['15-18hr']),
+                    getArrayAvg(groupedMeasrumentByHour['18-21hr']),
+                    getArrayAvg(groupedMeasrumentByHour['21-24hr'])
+                ],
+                color: '#00406C'
+            }]
+        });
     };
 
+    const showColumnGraph = () => {
+        if($scope.columnGraph){
+            return
+        }
+        $scope.lineGraph = false
+        $scope.columnGraph = true
+    }
+
+
+    const showLineGraph = () => {
+        if($scope.lineGraph){
+            return
+        }
+        $scope.lineGraph = true
+        $scope.columnGraph = false
+    }
+
     const init = () => {
-        listMeasurements()
-        listMeasurementsChart()
-        showPatient($routeParams.id)
+        if ($scope.loadingInit) {
+            return;
+        }
+
+        $scope.loadingInit = true;
+
+        $q.all([listMeasurements(), listMeasurementsChart(), showPatient($routeParams.id)]).then(() => {
+            $scope.loadingInit = false;
+        })
     };
 
     const dateSelect = () => {
-        init()
+        $scope.currentPage = 1
+        listMeasurements()
     };
                 
+    const chartdateSelect = () => {
+        listMeasurementsChart()
+    }
 
     init()
 
 
-    $scope.nextPage = nextPage;
-    $scope.previousPage = previousPage;
-    $scope.pageSelect = pageSelect;
+    $scope.showLineGraph = showLineGraph
+    $scope.showColumnGraph = showColumnGraph
+    $scope.onPaginate = onPaginate
+    $scope.chartdateSelect = chartdateSelect;
     $scope.dateSelect = dateSelect;
     $scope.editMeasurement = editMeasurement;
     $scope.getMeasurement = getMeasurement;

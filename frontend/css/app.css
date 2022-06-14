@@ -1,9 +1,9 @@
 html{
-    background-color: gray;
+    background-color: #002E4E;
 }
 
 div.ng-scope{
-    background-color: gray;
+    background-color: #002E4E;
 }
 
 h1{
@@ -12,10 +12,14 @@ h1{
 }
 
 a {
-    color: black;
+    color: white;
     text-decoration: none;
 }
 
+#nav-a{
+    color: white;
+    text-decoration: none;
+}
 .card{
     margin-left: auto;
     margin-right: auto;
