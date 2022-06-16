@@ -1,4 +1,4 @@
-angular.module("measurementsApp").controller('patientCtrl', function($scope, patientService, measurementsService, $routeParams, $q){
+angular.module("measurementsApp").controller('patientCtrl', function($scope, patientService, measurementsService, uiModal, $routeParams, $q){
     
     $scope.currentPage = 1;
     $scope.model = "patient";
@@ -7,8 +7,6 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, pat
     $scope.test = new Date( moment());
     $scope.selectedDay = new Date(moment());
     $scope.today = new Date(moment());
-    $scope.createdMeasurement = {};
-    $scope.createdMeasurement.measurement_date = new Date(moment().format('yyyy-MM-DDTHH:mm'));
     $scope.time = moment().format('LT');
     $scope.lineGraph = true;
     $scope.columnGraph = false;
@@ -42,11 +40,26 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, pat
     const getPatient = patient => {
         $scope.editedPatient = angular.copy(patient)
         $scope.editedPatient.borned_at = new Date($scope.editedPatient.borned_at)
-
+        openPatientEditionModal();
     };
 
-    const editPatient = () => {
-        patientService.edit($scope.editedPatient)
+    const openPatientEditionModal = () => {
+        const modalInstance = uiModal.open({
+            templateUrl: './views/modals/patientEdition.html',
+            controller: 'patientEditionModalCtrl',
+            resolve: {
+                patient: () => $scope.editedPatient
+            },
+            backdrop: 'static'
+        })
+
+        modalInstance.result.then(editedPatient => {
+            editPatient(editedPatient)
+        })
+    }
+
+    const editPatient = (editedPatient) => {
+        patientService.edit(editedPatient)
         .then(() => {
             Swal.fire({
                 position: 'top-center',
@@ -65,7 +78,30 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, pat
                 text: error.data.msg,
               });
         });
-        delete $scope.patientEdit;
+        delete $scope.editedPatient;
+    }
+
+    const changeProfilePic = () => {
+        console.log('fiz algo');
+        patientService.changeProfilePic($routeParams.id, $scope.newProfilePic)
+            .then(() => {
+                Swal.fire({
+                    position: 'top-center',
+                    icon: 'success',
+                    title: 'Foto de perfil trocada com sucesso',
+                    showConfirmButton: false,
+                    timer: 1500
+                  }).then(() => {
+                    showPatient($routeParams.id)
+                    })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: error.data.msg,
+                    });
+            });
+        })
     }
 
     const listMeasurements = () => {
@@ -86,7 +122,7 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, pat
 
                 $scope.measurementsData = res.data.items.map((measurement) => ({
                     ...measurement,
-                      measurement_date: moment(measurement.measurement_date).format('LT')
+                      measurement_date: new Date(measurement.measurement_date)
                     }));
             
             })
@@ -106,7 +142,6 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, pat
              .then((res) => {
                  $scope.measurementsChart = res.data
                 const measurementsValues = res.data.map((measurement) => [ +moment(measurement.measurement_date).format('x') ,measurement.glucose])
-                console.log(measurementsValues);
                 renderCharts(measurementsValues)
          
              })
@@ -116,8 +151,21 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, pat
              })
      };
 
-    const addMeasurement = () => {
-        measurementsService.store($scope.createdMeasurement, $routeParams.id)
+     const openMeasurementCreationModal = () => {
+        const modalInstance = uiModal.open({
+            templateUrl: './views/modals/measurementCreation.html',
+            controller: 'measurementCreationModalCtrl',
+            resolve: {},
+            backdrop: 'static'
+        })
+
+        modalInstance.result.then(createdMeasurement => {
+            addMeasurement(createdMeasurement)
+        })
+    }
+
+    const addMeasurement = (createdMeasurement) => {
+        measurementsService.store(createdMeasurement, $routeParams.id)
         .then(() => {
             
             Swal.fire({
@@ -130,9 +178,6 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, pat
             }).then(() => {
                 init()
                 })
-            $scope.createdMeasurement = {};
-            $scope.createdMeasurement.measurement_date = new Date(moment().format('yyyy-MM-DDTHH:mm'))
-            $scope.measurementCreationForm.$setPristine();
         })
 
         .catch(error => {
@@ -147,12 +192,27 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, pat
 
     const getMeasurement = measurement => {
         $scope.editedMeasurement = angular.copy(measurement)
-        $scope.editedMeasurement.measurement_date = new Date($scope.editedMeasurement.measurement_date)
-        $scope.editedMeasurement.measurement_date.setHours( $scope.editedMeasurement.measurement_date.getHours() + 3);
+        console.log($scope.editedMeasurement);
+        openMeasurementEditionModal();
     };
 
-    const editMeasurement = () => {
-        measurementsService.edit($scope.editedMeasurement, $routeParams.id, $scope.editedMeasurement.id)
+    const openMeasurementEditionModal = () => {
+        const modalInstance = uiModal.open({
+            templateUrl: './views/modals/measurementEdition.html',
+            controller: 'measurementEditionModalCtrl',
+            resolve: {
+                measurement: () => $scope.editedMeasurement
+            },
+            backdrop: 'static'
+        })
+
+        modalInstance.result.then(editedMeasurement => {
+            editMeasurement(editedMeasurement)
+        })
+    }
+
+    const editMeasurement = (editedMeasurement) => {
+        measurementsService.edit(editedMeasurement, $routeParams.id, editedMeasurement.id)
         .then(() => {
             Swal.fire({
                 position: 'top-center',
@@ -281,7 +341,7 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, pat
             },
 
             title: {
-              text: `Medicoes do dia`
+              text: `Gicemia`
             },
           
             yAxis: {
@@ -375,9 +435,10 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, pat
             '21-24hr': [],
           });
 
-          console.log(JSON.stringify(groupedMeasrumentByHour, null, 4), 'OLA')
+          const measurementsAvg = []
+          Object.values(groupedMeasrumentByHour).forEach(arr => {measurementsAvg.push(getArrayAvg(arr))})
 
-          Highcharts.chart('column', {
+          const columnChart = Highcharts.chart('column', {
             chart: {
                 type: 'column'
             },
@@ -417,24 +478,35 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, pat
                 column: {
                     pointPadding: 0.2,
                     borderWidth: 0
-                }
+                },
+                overflow: 'scroll'
             },
             
             series: [{
                 name: 'glicemia mg/dl',
-                data: [ getArrayAvg(groupedMeasrumentByHour['00-03hr']),
-                    getArrayAvg(groupedMeasrumentByHour['03-06hr']),
-                    getArrayAvg(groupedMeasrumentByHour['06-09hr']),
-                    getArrayAvg(groupedMeasrumentByHour['09-12hr']),
-                    getArrayAvg(groupedMeasrumentByHour['12-15hr']),
-                    getArrayAvg(groupedMeasrumentByHour['15-18hr']),
-                    getArrayAvg(groupedMeasrumentByHour['18-21hr']),
-                    getArrayAvg(groupedMeasrumentByHour['21-24hr'])
-                ],
+                data: measurementsAvg,
                 color: '#00406C'
-            }]
+            }],
+
+            responsive: {
+                rules: [{
+                  condition: {
+                    maxWidth: 500
+                  },
+                  chartOptions: {
+                    legend: {
+                      layout: 'horizontal',
+                      align: 'center',
+                      verticalAlign: 'bottom'
+                    }
+                  }
+                }]
+              }
         });
+
     };
+
+    
 
     const showColumnGraph = () => {
         if($scope.columnGraph){
@@ -442,6 +514,7 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, pat
         }
         $scope.lineGraph = false
         $scope.columnGraph = true
+        
     }
 
 
@@ -476,10 +549,13 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, pat
 
     init()
 
-
-    $scope.showLineGraph = showLineGraph
-    $scope.showColumnGraph = showColumnGraph
-    $scope.onPaginate = onPaginate
+    $scope.openMeasurementEditionModal = openMeasurementEditionModal;
+    $scope.openMeasurementCreationModal = openMeasurementCreationModal;
+    $scope.openPatientEditionModal = openPatientEditionModal;
+    $scope.changeProfilePic = changeProfilePic;
+    $scope.showLineGraph = showLineGraph;
+    $scope.showColumnGraph = showColumnGraph;
+    $scope.onPaginate = onPaginate;
     $scope.chartdateSelect = chartdateSelect;
     $scope.dateSelect = dateSelect;
     $scope.editMeasurement = editMeasurement;

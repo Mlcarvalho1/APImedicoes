@@ -1,8 +1,6 @@
-angular.module("measurementsApp").controller('userCtrl', function($scope, userService, patientService, $location){
+angular.module("measurementsApp").controller('userCtrl', function($scope, $location, userService, patientService ,uiModal){
     $scope.model = "user";    
     
-    $scope.today = new Date().toISOString().slice(0,10)
-
     function calculateAge(birthday) { // birthday is a date
         birthdayDate = new Date(birthday)
         const ageDifMs = Date.now() - birthdayDate.getTime();
@@ -21,10 +19,27 @@ angular.module("measurementsApp").controller('userCtrl', function($scope, userSe
 
     const getUser = (user) => {
         $scope.userEdit = angular.copy(user)
+        openUserEditModal()
     }
 
-    const editUser = () => {
-        userService.edit($scope.userEdit)
+    const openUserEditModal = () => {
+        const modalInstance = uiModal.open({
+            templateUrl: './views/modals/userEdit.html',
+            controller: 'userEditModalCtrl',
+            resolve: {
+                user: () => $scope.userEdit
+            },
+            backdrop: 'static'
+        })
+
+        modalInstance.result.then(userEdit => {
+            editUser(userEdit)
+        })
+    }
+
+
+    const editUser = (userEdit) => {
+        userService.edit(userEdit)
             .then(() => {
                 Swal.fire({
                     position: 'top-center',
@@ -59,8 +74,21 @@ angular.module("measurementsApp").controller('userCtrl', function($scope, userSe
             })
     };
 
-    const addPatient = () => {
-        patientService.create($scope.createdPatient)
+    const openPatientCreationModal = () => {
+        const modalInstance = uiModal.open({
+            templateUrl: './views/modals/patientCreation.html',
+            controller: 'patientCreationModalCtrl',
+            resolve: {},
+            backdrop: 'static'
+        })
+
+        modalInstance.result.then(createdPatient => {
+            addPatient(createdPatient)
+        })
+    }
+
+    const addPatient = (createdPatient) => {
+        patientService.create(createdPatient)
             .then(() => {
                 Swal.fire({
                     position: 'top-center',
@@ -68,22 +96,65 @@ angular.module("measurementsApp").controller('userCtrl', function($scope, userSe
                     title: 'Paciente adicionado com sucesso',
                     showConfirmButton: false,
                     timer: 1500
-                  });
+                });
+                listPacients()
                 delete $scope.createdPatient;
                 $scope.patientForm.$setPristine();
-                init()
             })
             .catch(error => {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: error.data.error,
-                  });
-            
-
+                    text: error.data.e.message,
                 });
-    };
+                
+            })
+        };
 
+    const getPatient = (patient) => {
+        $scope.patientEdit = angular.copy(patient)
+        $scope.patientEdit.borned_at = new Date($scope.patientEdit.borned_at)
+        openPatientEditionModal()
+    }
+            
+    const openPatientEditionModal = () => {
+        const modalInstance = uiModal.open({
+            templateUrl: './views/modals/patientEdition.html',
+            controller: 'patientEditionModalCtrl',
+            resolve: {
+                patient: () => $scope.patientEdit
+            },
+            backdrop: 'static'
+        })
+
+        modalInstance.result.then(patientEdit => {
+            editPatient(patientEdit)
+        })
+    }
+
+    const editPatient = (patientEdit) => {
+        patientService.edit(patientEdit)
+        .then(() => {
+            Swal.fire({
+                position: 'top-center',
+                icon: 'success',
+                title: 'Paciente editado com sucesso',
+                showConfirmButton: false,
+                timer: 1500
+                }).then(() => {
+                    listPacients()
+                })
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: error.data.msg,
+                });
+        });
+        delete $scope.patientEdit;
+    }
+        
     const removePatient = (patientId) => {     
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
@@ -152,41 +223,17 @@ angular.module("measurementsApp").controller('userCtrl', function($scope, userSe
             })
     };
 
-    const getPatient = (patient) => {
-        $scope.patientEdit = angular.copy(patient)
-        $scope.patientEdit.borned_at = new Date($scope.patientEdit.borned_at)
-    }
-
     const goToPatient = (id) => {
         patientService.show(id)
         $location.path(`/patient/${id}`)
 
     }
-
-    const editPatient = () => {
-        patientService.edit($scope.patientEdit)
-        .then(() => {
-            Swal.fire({
-                position: 'top-center',
-                icon: 'success',
-                title: 'Paciente editado com sucesso',
-                showConfirmButton: false,
-                timer: 1500
-              }).then(() => {
-                  listPacients()
-                })
-        })
-        .catch(error => {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: error.data.msg,
-              });
-        });
-        delete $scope.patientEdit;
-    }
+    
     init();
 
+    $scope.openPatientEditionModal = openPatientEditionModal;
+    $scope.openPatientCreationModal = openPatientCreationModal;
+    $scope.openUserEditModal = openUserEditModal;
     $scope.removePatient = removePatient;
     $scope.orderBy = orderBy;
     $scope.editUser = editUser;
@@ -195,6 +242,5 @@ angular.module("measurementsApp").controller('userCtrl', function($scope, userSe
     $scope.editPatient = editPatient;
     $scope.getPatient = getPatient;
     $scope.goToPatient = goToPatient;
-
 
 })

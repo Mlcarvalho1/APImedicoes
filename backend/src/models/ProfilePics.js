@@ -43,6 +43,6 @@ export default class Patient extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.patient, { foreignKey: 'patient_id', as: 'patients' });
+    this.belongsTo(models.patient, { foreignKey: 'patient_id', as: 'patients_pic' });
   }
 }

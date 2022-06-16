@@ -1,6 +1,7 @@
 import multer from 'multer';
 import multerConfig from '../config/multer';
 import FotoService from '../services/FotoService';
+import BaseController from './BaseController';
 
 const upload = multer(multerConfig).single('foto');
 
@@ -20,10 +21,7 @@ class FotoController {
 
         return res.json(profilepic);
       } catch (e) {
-        return console.log(e);
-        // return res.status(400).json({
-        // errors: e.errors.map((err) => err.mensage),
-        // });
+        return BaseController.handleError(res, e);
       }
     });
   }

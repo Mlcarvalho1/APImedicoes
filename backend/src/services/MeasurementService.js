@@ -51,7 +51,6 @@ export default {
       Measurement.findAll({
         order: [['measurement_date', 'ASC']],
         where: whereCondition,
-        logging: console.log,
         include: {
           model: Patient,
           where: {
@@ -118,10 +117,6 @@ export default {
       },
       attributes: ['glucose', 'carbs', 'insulin', 'measurement_date', 'id'],
     });
-
-    // return measurements.map((measurement) => ({
-    //   measurement_date: measurement_date.setHours(measurement.measurement_date.getHours() - 3)
-    // }));
   },
 
   delete: async (id, patient_id, user_id) => {

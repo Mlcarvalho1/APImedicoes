@@ -3,44 +3,23 @@
     <div class="card mr-lg-3"  id="patient-card" >
         <div>
           <div class="card-body">
-            <button style="float: right ;" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#patientEditionModal" ng-click="getPatient(patientData)">
+            <button style="float: right ;" type="button" class="btn btn-secondary" ng-click="getPatient(patientData)">
               editar
             </button>
             <h5 class="card-title">{{patientData.name}}</h5>
-            <p class="card-text">idade: {{patientData.age}} Anos</p>
+            <div id="patient-pic-div"><img class="card-img-top" ng-src="/uploads/{{patientData.profile_pics[0].filename || 'profilepic.jpg'}}" alt="Card image cap" id="patient-card-image" ng-click="openModal()"></div>
+            <p class="card-text">idade: {{patientData.age}}  Anos</p>
             <p class="card-text">peso: {{patientData.weight}} Kg</p>
             <p class="card-text">altura: {{patientData.height}} M</p>
             <p class="card-text">media glicemica: {{patientData.glycemic_average}} mg/dl</p>
             <p class="card-text">hemoglobina glicada estimada: {{patientData.glycated_hemoglobin}}%</p>
-            <div class="modal fade" id="patientEditionModal" tabindex="-1" aria-labelledby="patientEditionModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="patientEditionModalLabel">{{patientData.name}}</h5>
-                  </div>
-                  <div class="modal-body" >
-                    <form  name="patientForm">
-                      <br>
-                      nome:<input type="text" ng-required="true" class="form-control" ng-model="editedPatient.name" ng-maxlength="80">
-                      peso:<input type="text" ng-required="true" class="form-control" ng-model="editedPatient.weight" ui-weight>
-                      altura:<input type="text" ng-required="true" class="form-control" ng-model="editedPatient.height" ui-height >
-                      data de nascimento:<input type="date" ng-required="true" class="form-control" ng-model="editedPatient.borned_at" ng-max='today' max="{{today | date:'yyyy-MM-dd'}}">
-                    </form>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" ng-disabled="patientForm.$invalid" ng-click="editPatient()">Salvar</button>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>  
       </div>
       <div class="card mt-lg-0 mt-3" id="patients-card">
         <div class="card-body">
           <h5 class="card-title float-left">Medições</h5>
-          <button type="button" class="btn btn-secondary float-right" data-bs-toggle="modal" data-bs-target="#measurementCreationModal">
+          <button type="button" class="btn btn-secondary float-right" ng-click="openMeasurementCreationModal()">
             Criar medição
           </button>
           <input type="date" style="max-width: 140px ;" class="form-control mx-auto" aria-label="" aria-describedby="basic-addon1" ng-max='today' max="{{today | date:'yyyy-MM-dd'}}" ng-change="dateSelect()" ng-model="selectedDay" >
@@ -57,7 +36,7 @@
               </thead>
               <tbody>
                 <tr ng-repeat="measurement in measurementsData | filter: selectedDate">
-                  <th scope="row">{{measurement.measurement_date}}</th>
+                  <th scope="row">{{measurement.measurement_date | date : 'shortTime'}}</th>
                   <td>{{measurement.glucose}}</td>
                   <td>{{measurement.carbs}}</td>
                   <td>{{measurement.insulin}} </td>
@@ -67,8 +46,8 @@
                         <i class="fa fa-list" aria-hidden="true"></i>
                       </a>
                       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><a class="dropdown-item"ng-click="getMeasurement(measurement)" data-bs-toggle="modal" data-bs-target="#measurementEditionModal">Editar <i class="fa fa-pencil" aria-hidden="true"></i></a></li>
-                        <li><a class="dropdown-item" ng-click="removeMeasurement(measurement.id)"></i>Deletar <i class="fa fa-exclamation-triangle" aria-hidden="true"></i></a></li>
+                        <li><a class="dropdown-item"ng-click="getMeasurement(measurement)">Editar<i class="fa fa-pencil" aria-hidden="true"></i></a></li>
+                        <li><a class="dropdown-item" ng-click="removeMeasurement(measurement.id)"></i>Deletar<i class="fa fa-exclamation-triangle" aria-hidden="true"></i></a></li>
                       </ul>
                     </div>
                   </td>
@@ -76,52 +55,6 @@
               </tbody>
             </table>
             <pagination ng-if="!loadingMeasurements" total-items="totalItems" items-per-page="6" on-paginate="onPaginate" current-page="currentPage"></pagination>
-            <!-- Modal -->
-            <div class="modal fade" id="measurementCreationModal" tabindex="-1" aria-labelledby="measurementCreationModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="measurementCreationModalLabel">Medição</h5>
-                  </div>
-                  <div class="modal-body">
-                    <form  name="measurementCreationForm">
-                      <br>
-                      Glicemia:<input type="text"  class="form-control" ng-model="createdMeasurement.glucose" ui-weight>
-                      Carboidratos ingeridos:<input type="text" class="form-control" ng-model="createdMeasurement.carbs" ui-weight>
-                      Insulina aplicada:<input type="text"  class="form-control" ng-model="createdMeasurement.insulin" ui-weight>
-                      Horario da medição:<input type="datetime-local"  ng-required="true"  class="form-control"  ng-model="createdMeasurement.measurement_date" >
-                  </form>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" ng-disabled="measurementCreationForm.$invalid" ng-click="addMeasurement()">Salvar</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- Measurement Edition Modal -->
-            <div class="modal fade" id="measurementEditionModal" tabindex="-1" aria-labelledby="measurementEditionModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="measurementEditionModalLabel">Medição</h5>
-                  </div>
-                  <div class="modal-body">
-                    <form  name="measurementEditionForm">
-                      <br>
-                      Glicemia:<input type="text"  class="form-control" ng-model="editedMeasurement.glucose" ui-weight>
-                      Carboidratos ingeridos:<input type="text" class="form-control" ng-model="editedMeasurement.carbs" ui-weight>
-                      Insulina aplicada:<input type="text"  class="form-control" ng-model="editedMeasurement.insulin" ui-weight>
-                      Horario da medição:<input type="datetime-local"  ng-required="true"  class="form-control" max="{{now}}" ng-model="editedMeasurement.measurement_date" >
-                  </form>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" ng-click="editMeasurement()">Salvar</button>
-                  </div>
-                </div>
-              </div>
-            </div>
         </div>
       </div>
     </div>
@@ -134,11 +67,15 @@
           </div>
         </div>
       </form>
-      <p class="text-center">
-        Tipo de grafico:
-        <a ng-click="showLineGraph()"><i class="fa fa-line-chart" aria-hidden="true"></i></a>
-        <a ng-click="showColumnGraph()"><i class="fa fa-bar-chart" aria-hidden="true"></i></a>
-      </p>
+      <div style="margin-left: 10vw ;" class=" btn-group btn-group-toggle">
+        <label class="btn btn-secondary" ng-class="{ 'active': lineGraph }">
+          <input type="radio" ng-click="showLineGraph()"><i class="fa fa-line-chart" aria-hidden="true"></i></input>
+        </label>
+        <label class="btn btn-secondary" ng-class="{ 'active': columnGraph }">
+          <input type="radio" ng-click="showColumnGraph()"><i class="fa fa-bar-chart" aria-hidden="true"></i></input>
+        </label>
+        
+      </div>
         
         <div id="line" ng-show="lineGraph"></div>
       <figure class="highcharts-figure" ng-show="lineGraph">
@@ -147,7 +84,7 @@
       </figure>
       <figure class="highcharts-figure" ng-show="columnGraph">
         <div id="column"></div>
-    </figure>
+      </figure>
       <!-- <canvas id="line" class="chart chart-line"  chart-data="measurementsValues" chart-labels="measurementsDates" chart-series="series" chart-options="options" chart-dataset-override="datasetOverride" chart-click="onClick">
      
       </canvas> -->

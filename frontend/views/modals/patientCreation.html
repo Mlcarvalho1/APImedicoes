@@ -1,0 +1,19 @@
+<div class="modal-header">
+    <h3 class="modal-title" id="modal-title">Novo paciente</h3>
+</div>
+<div class="modal-body" id="modal-body">
+    <form  name="patientForm">
+        <br>
+        nome:<input type="text" ng-required="true" class="form-control" ng-model="createdPatient.name" ng-maxlength="80">
+        peso:<input type="text" ng-required="true" class="form-control" ng-model="createdPatient.weight" ui-weight>
+        altura:<input type="text" ng-required="true" class="form-control" ng-model="createdPatient.height" ui-height >
+        data de nascimento:<input type="date" ng-required="true" class="form-control" ng-model="createdPatient.borned_at" max="{{today}}">
+        <div ng-show="patientForm.$invalid && patientForm.$dirty"  class="alert alert-danger">
+          Todos os campos sao obrigatorios
+        </div>
+      </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" ng-click="cancel()">Fechar</button>
+    <button type="button" class="btn btn-primary" ng-disabled="patientForm.$invalid" ng-click="save()">Salvar</button>
+</div>

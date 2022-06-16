@@ -1,0 +1,16 @@
+<div class="modal-header">
+    <h3 class="modal-title" id="modal-title">Medição</h3>
+</div>
+<div class="modal-body" id="modal-body">
+    <form  name="measurementCreationForm">
+        <br>
+        Glicemia:<input type="text"  class="form-control" ng-model="createdMeasurement.glucose" ui-weight>
+        Carboidratos ingeridos:<input type="text" class="form-control" ng-model="createdMeasurement.carbs" ui-weight>
+        Insulina aplicada:<input type="text"  class="form-control" ng-model="createdMeasurement.insulin" ui-weight>
+        Horario da medição:<input type="datetime-local"  ng-required="true"  class="form-control" ng-model="createdMeasurement.measurement_date" >
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" ng-click="cancel()">Fechar</button>
+    <button type="button" class="btn btn-primary" ng-disabled="patientForm.$invalid" ng-click="save()">Salvar</button>
+</div>

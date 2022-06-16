@@ -9,11 +9,14 @@ angular.module('measurementsApp').factory('patientService', function($http, conf
 
     const remove = patientID => $http.delete(`${config.baseUrl}/patients/${patientID}`);
 
+    const changeProfilePic = (patient_id,pic) => $http.post(`${config.baseUrl}/fotos`, pic)
+
     return {
         index,
         create,
         edit,
         show,
-        remove
+        remove,
+        changeProfilePic
     }
 })

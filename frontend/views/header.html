@@ -1,16 +1,16 @@
 <nav class="navbar navbar-expand-lg " ng-controller="authCtrl" style="padding-right: 2vw; width: 100vw; background-color: #001A2C">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand">
         <img src="../uploads/AMIGOblack.png" width="60" height="60" class="d-inline-block align-top" alt="">
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+      <i class="fa fa-bars" aria-hidden="true"></i>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a id="nav-a" class="nav-item nav-link active" href="#">Início</a>
+        <a id="nav-a" class="nav-item nav-link active" ng-if="!userLogged" href="#">Início</a>
         <a id="nav-a" class="nav-item nav-link" href="http://127.0.0.1:5500/index.html#!users" ng-if="userLogged">Meu perfil</a>
         <a id="nav-a" class="nav-item nav-link" ng-if="userLogged" ng-click="logout()">Sair da conta</a>
         <!-- <a class="nav-item nav-link" href="http://127.0.0.1:5500/index.html#!patient">Pacientes</a> -->
       </div>
     </div>
-  </nav>
+</nav>
