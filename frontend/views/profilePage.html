@@ -1,6 +1,6 @@
 <div class="container" ng-controller="userCtrl" style="padding-top: 20px;">
       <div class="card"  id="profile-card" >
-        <img class="card-img-top" src="../uploads/profilepic.jpg" alt="Card image cap" id="profile-card-image">
+        <img class="card-img-top" src="../uploads/AMIGOblack.png" alt="Card image cap" id="profile-card-image">
         <div class="card-body">
           <h5 class="card-title">{{userData.name}}</h5>
           <p class="card-text";">{{userData.email}}</p>
@@ -26,7 +26,10 @@
             </ul>
             <input type="text" class="form-control" aria-label="Text input with dropdown button" ng-model="patientSearch">
           </div>
-          <table class="table table-hover table-responsive-sm">
+          <div ng-if="!patientsData.length" class="alert alert-primary" id="user-alert" role="alert">
+            Nenhum Paciente cadastrado
+          </div>
+          <table ng-if="patientsData.length" class="table table-hover table-responsive-sm">
             <thead>
               <tr>
                 <!-- <th scope="col">id</th> -->

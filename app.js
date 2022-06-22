@@ -37,7 +37,7 @@ class App {
   setup() {
     this.middlewares();
     this.routes();
-    this.app.listen(3000, () => console.log('Funcionando'));
+    this.app.listen(3333, () => console.log('Funcionando'));
   }
 }
 

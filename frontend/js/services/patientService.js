@@ -9,7 +9,28 @@ angular.module('measurementsApp').factory('patientService', function($http, conf
 
     const remove = patientID => $http.delete(`${config.baseUrl}/patients/${patientID}`);
 
-    const changeProfilePic = (patient_id,pic) => $http.post(`${config.baseUrl}/fotos`, pic)
+    const changeProfilePic = pic => {
+        console.log(pic)
+        return $http({
+            method: 'POST',
+            url: `${config.baseUrl}/fotos`,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            },
+            data: pic,
+            transformRequest: function (data, headersGetter) {
+                var formData = new FormData();
+                angular.forEach(data, function (value, key) {
+                    formData.append(key, value);
+                });
+
+                var headers = headersGetter();
+                delete headers['Content-Type'];
+
+                return formData;
+            }
+        });
+    }
 
     return {
         index,

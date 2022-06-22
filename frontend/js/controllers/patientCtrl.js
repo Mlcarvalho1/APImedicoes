@@ -12,13 +12,28 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, pat
     $scope.columnGraph = false;
 
 
-    function calculateAge(birthday) { // birthday is a date
+    function calculateAge(birthday) { 
         birthdayDate = new Date(birthday);
         const ageDifMs = Date.now() - birthdayDate.getTime();
-        const ageDate = new Date(ageDifMs); // miliseconds from epoch
+        const ageDate = new Date(ageDifMs);
         return Math.abs(ageDate.getUTCFullYear() - 1970);
     };
 
+    const openProfilePicEditionModal = () => {
+        const modalInstance = uiModal.open({
+            templateUrl: './views/modals/changeProfilePic.html',
+            controller: 'profilePicEditionModalCtrl',
+            resolve: {
+                patientId: () => $scope.patientData.id
+            },
+            backdrop: 'static'
+        })
+        
+        modalInstance.result.then(() => {
+            showPatient()
+        })
+    }
+    
     const showPatient = patientId => {
         return patientService.show(patientId)
         .then((resp) => {
@@ -79,29 +94,6 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, pat
               });
         });
         delete $scope.editedPatient;
-    }
-
-    const changeProfilePic = () => {
-        console.log('fiz algo');
-        patientService.changeProfilePic($routeParams.id, $scope.newProfilePic)
-            .then(() => {
-                Swal.fire({
-                    position: 'top-center',
-                    icon: 'success',
-                    title: 'Foto de perfil trocada com sucesso',
-                    showConfirmButton: false,
-                    timer: 1500
-                  }).then(() => {
-                    showPatient($routeParams.id)
-                    })
-            .catch(error => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: error.data.msg,
-                    });
-            });
-        })
     }
 
     const listMeasurements = () => {
@@ -506,8 +498,6 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, pat
 
     };
 
-    
-
     const showColumnGraph = () => {
         if($scope.columnGraph){
             return
@@ -549,10 +539,10 @@ angular.module("measurementsApp").controller('patientCtrl', function($scope, pat
 
     init()
 
+    $scope.openProfilePicEditionModal = openProfilePicEditionModal;
     $scope.openMeasurementEditionModal = openMeasurementEditionModal;
     $scope.openMeasurementCreationModal = openMeasurementCreationModal;
     $scope.openPatientEditionModal = openPatientEditionModal;
-    $scope.changeProfilePic = changeProfilePic;
     $scope.showLineGraph = showLineGraph;
     $scope.showColumnGraph = showColumnGraph;
     $scope.onPaginate = onPaginate;

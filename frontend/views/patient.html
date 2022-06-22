@@ -7,7 +7,10 @@
               editar
             </button>
             <h5 class="card-title">{{patientData.name}}</h5>
-            <div id="patient-pic-div"><img class="card-img-top" ng-src="/uploads/{{patientData.profile_pics[0].filename || 'profilepic.jpg'}}" alt="Card image cap" id="patient-card-image" ng-click="openModal()"></div>
+            <!-- <div class="relative" id="patient-card-image">
+              <img class="card-img-top" ng-src="/uploads/{{patientData.profile_pics[0].filename || 'profilepic.jpg'}}" alt="Card image cap" ng-click="openModal()">
+              <div class="patient__div--image"><a id="profile-pick-text" ng-click="openProfilePicEditionModal()">Editar</a></div>
+            </div> -->
             <p class="card-text">idade: {{patientData.age}}  Anos</p>
             <p class="card-text">peso: {{patientData.weight}} Kg</p>
             <p class="card-text">altura: {{patientData.height}} M</p>
@@ -24,8 +27,11 @@
           </button>
           <input type="date" style="max-width: 140px ;" class="form-control mx-auto" aria-label="" aria-describedby="basic-addon1" ng-max='today' max="{{today | date:'yyyy-MM-dd'}}" ng-change="dateSelect()" ng-model="selectedDay" >
           </form>
+          <div ng-if="!measurementsData.length" class="alert alert-primary" id="alert" role="alert">
+              Nenhum registro nesta data
+          </div>
             <img src="../uploads/Loading_icon.gif" ng-if="loadingMeasurements" alt="">
-            <table class="table table-hover table-responsive-sm" ng-show="!loadingMeasurements"> 
+            <table ng-if="measurementsData.length" class="table table-hover table-responsive-sm" ng-show="!loadingMeasurements"> 
               <thead>
                 <tr>
                   <th scope="col">Horário</th>
@@ -54,11 +60,11 @@
                 </tr>  
               </tbody>
             </table>
-            <pagination ng-if="!loadingMeasurements" total-items="totalItems" items-per-page="6" on-paginate="onPaginate" current-page="currentPage"></pagination>
+            <pagination ng-if="!loadingMeasurements && measurementsData.length" total-items="totalItems" items-per-page="6" on-paginate="onPaginate" current-page="currentPage"></pagination>
         </div>
       </div>
     </div>
-    <div class="container chart mt-3" >
+    <div class="container chart mt-3" ng-show="measurementsChart.length">
       <form class="form-inline">
         <div class="mx-auto">
           <div class="">

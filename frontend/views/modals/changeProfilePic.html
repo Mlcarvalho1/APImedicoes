@@ -1,0 +1,13 @@
+<div class="modal-header">
+    <h3 class="modal-title" id="modal-title">Trocar foto de Paciente</h3>
+</div>
+<div class="modal-body" id="modal-body">
+    <form  name="profilePicEdit">
+        <br>
+        nova foto:<input type="file" file-model="profilePic" ngf-select ngf-drop ngf-change="onSelectGroupImage($file)"/>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" ng-click="cancel()">Fechar</button>
+    <button type="button" class="btn btn-primary" ng-click="save()">Salvar</button>
+</div>
